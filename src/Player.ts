@@ -35,7 +35,7 @@ export class Player extends Entity
 class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
 {
     minSpeed = 0.04;
-    maxSpeed = 1;
+    maxSpeed = 0.5;
     update(delta: number): void
     {
         this.runOnEntities((entity, phys, _, txt) => {
