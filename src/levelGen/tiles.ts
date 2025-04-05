@@ -103,8 +103,8 @@ export class TileGenerator extends GlobalSystem<[]>
     {
         while (TileGenerator.layers < 100)
         {
-            const row = this.lastRow !== undefined ? this.lastRow.transform.y : LD57.GAME_HEIGHT + 16;
-            this.lastRow = this.scene.addEntity(new TileRow(0, row + 16));
+            const row = this.lastRow !== undefined ? this.lastRow.transform.y : LD57.GAME_HEIGHT + 12;
+            this.lastRow = this.scene.addEntity(new TileRow(0, row + 12));
             TileGenerator.layers += 1;
         }
     }
