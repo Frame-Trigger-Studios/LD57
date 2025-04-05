@@ -2,7 +2,7 @@ import {Entity, Log, MathUtil, TiledMapLoader, Timer} from "lagom-engine";
 import {MovingThing} from "./MovingThing.ts";
 import {LD57} from "./LD57.ts";
 import stuff from "./art/sets/stuff.json";
-import {SolidTile} from "./levelGen/tiles.ts";
+import {Coin, SolidTile} from "./levelGen/tiles.ts";
 
 export class DemoThings extends Entity
 {
@@ -47,9 +47,13 @@ export class DemoThings extends Entity
                 // Each tileid represents a spawnable thing/sprite variant.
                 switch (tileId)
                 {
-                    // TODO map to objects
+                    case 9:
+                        e.addChild(new Coin(x,y ));
+                    default: {
+                        e.addChild(new SolidTile(x, y, tileId));
+                    }
                 }
-                e.addChild(new SolidTile(x, y, tileId));
+
             })
         });
 

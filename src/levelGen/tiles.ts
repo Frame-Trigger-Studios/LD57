@@ -1,4 +1,4 @@
-import {AnimatedSpriteController, Entity, GlobalSystem, Log, MathUtil, RenderRect} from "lagom-engine";
+import {AnimatedSpriteController, Entity, GlobalSystem, Log, MathUtil, RenderRect, Sprite} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 import {
@@ -37,6 +37,18 @@ export class SolidTile extends Tile {
                 textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
 
+    }
+}
+
+export class Coin extends Tile {
+
+    constructor(x: number, y: number) {
+        super("coin", x, y, Layers.FOREGROUND);
+    }
+
+    onAdded() {
+        super.onAdded();
+        this.addComponent(new Sprite(this.scene.game.getResource("coin").textureFromIndex(0)));
     }
 }
 

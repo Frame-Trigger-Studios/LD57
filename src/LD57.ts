@@ -22,6 +22,7 @@ import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
+import coinSpr from "./art/coin.png"
 import {PaletteSwapper} from "./paletteSwapper.ts";
 import {DemoThings} from "./DemoThings.ts";
 
@@ -94,6 +95,7 @@ export class LD57 extends Game
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("tile", new SpriteSheet(tileSpr, 12, 12))
         this.addResource("lady", new SpriteSheet(ladySpr, 12, 24))
+        this.addResource("coin", new SpriteSheet(coinSpr, 12, 12))
         this.addResource("inputPalette", new SpriteSheet(inputPaletteSpr, 4, 1))
         this.addResource("outputPalette", new SpriteSheet(outputPaletteSpr, 4, 1))
 
