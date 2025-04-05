@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "lagom-engine": "^1.2.1",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "pixi-filters": "^4.2.0"
   },
   "devDependencies": {
     "@types/webfontloader": "^1.6.34",
