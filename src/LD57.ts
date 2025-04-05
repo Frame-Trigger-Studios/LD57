@@ -11,7 +11,7 @@ class TitleScene extends Scene {
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "GAME NAME", {fontFamily: "retro", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD57", {fontFamily: "retro", fill: 0xffffff}));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -33,7 +33,7 @@ class MainScene extends Scene
     }
 }
 
-export class GameTemplate extends Game
+export class LD57 extends Game
 {
     static GAME_WIDTH = 512;
     static GAME_HEIGHT = 512;
@@ -45,8 +45,8 @@ export class GameTemplate extends Game
     constructor()
     {
         super({
-            width: GameTemplate.GAME_WIDTH,
-            height: GameTemplate.GAME_HEIGHT,
+            width: LD57.GAME_WIDTH,
+            height: LD57.GAME_HEIGHT,
             resolution: 1,
             backgroundColor: 0x200140
         });
@@ -60,7 +60,7 @@ export class GameTemplate extends Game
         this.setScene(new Scene(this));
 
         // Import sounds and set their properties
-        // const music = GameTemplate.audioAtlas.load("music", "ADD_ME")
+        // const music = LD57.audioAtlas.load("music", "ADD_ME")
         //     .loop(true)
         //     .volume(0.3);
 
@@ -79,7 +79,7 @@ export class GameTemplate extends Game
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new TitleScene(this));
+                this.setScene(new MainScene(this));
             }
         )
 
