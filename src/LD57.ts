@@ -48,8 +48,8 @@ class MainScene extends Scene
 
 export class LD57 extends Game
 {
-    static GAME_WIDTH = 512;
-    static GAME_HEIGHT = 512;
+    static GAME_WIDTH = 288;
+    static GAME_HEIGHT = 288;
 
     static muted = false;
     static musicPlaying = false;
@@ -60,7 +60,7 @@ export class LD57 extends Game
         super({
             width: LD57.GAME_WIDTH,
             height: LD57.GAME_HEIGHT,
-            resolution: 1,
+            resolution: 2,
             backgroundColor: 0x200140
         });
 
