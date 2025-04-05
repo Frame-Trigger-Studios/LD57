@@ -25,7 +25,8 @@ export class DemoThings extends Entity
             }
             if (tileId !== 0)
             {
-                currentSet.push([tileId, x, y]);
+                // tiles are 1 indexed in the save so 0 can be nothing
+                currentSet.push([tileId - 1, x, y]);
             }
         })
     }
@@ -48,7 +49,7 @@ export class DemoThings extends Entity
                 {
                     // TODO map to objects
                 }
-                e.addChild(new SolidTile(x, y));
+                e.addChild(new SolidTile(x, y, tileId));
             })
         });
 

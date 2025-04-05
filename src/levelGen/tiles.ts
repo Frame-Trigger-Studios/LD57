@@ -1,4 +1,4 @@
-import {AnimatedSpriteController, Entity, GlobalSystem, RenderRect} from "lagom-engine";
+import {AnimatedSpriteController, Entity, GlobalSystem, Log, MathUtil, RenderRect} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 import {
@@ -14,22 +14,27 @@ export const tileHeight = 12;
 
 // export const NUM_TILE_WIDE = LD57.GAME_WIDTH / tileWidth;
 
+
 export class Tile extends Entity {
 
 }
 
 export class SolidTile extends Tile {
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, readonly tileId: number) {
         super("solidTile", x, y, Layers.FOREGROUND);
     }
 
     onAdded() {
         super.onAdded();
+
+        const textureX = this.tileId % 12;
+        const textureY = Math.floor(this.tileId / 12);
+        Log.warn(this.tileId, textureX, textureY)
         this.addComponent(new AnimatedSpriteController(0, [
             {
                 id: 0,
-                textures: [this.scene.game.getResource("tile").texture(0, 0, 12, 12)]
+                textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
 
     }
@@ -84,7 +89,7 @@ export class TileGenerator extends GlobalSystem<[]> {
             this.lastRow = this.scene.addEntity(new TileRow(0, spawn_height + 12));
             for (let i = 0; i < rows[j].length; i++) {
                 if (rows[j][i] == 1) {
-                    this.lastRow.addChild(new SolidTile(i * tileWidth, 0));
+                    this.lastRow.addChild(new SolidTile(i * tileWidth, 0, 0));
                 } else {
                     // this.addChild(new EmptyTile(i * tileWidth, 0));
                 }
