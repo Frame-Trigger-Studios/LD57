@@ -1,5 +1,6 @@
-import {Component, Entity, Key, RenderRect, System} from "lagom-engine";
+import {Component, Entity, Key, RenderRect, System, TextDisp} from "lagom-engine";
 import {Layers} from "./LD57.ts";
+import {ThingMover} from "./MovingThing.ts";
 
 class Controllable extends Component
 {
@@ -26,24 +27,37 @@ export class Player extends Entity
         this.addComponent(new Controllable())
         this.addComponent(new PlayerPhys())
         this.addComponent(new RenderRect(0, 0, 8, 16, 0xFFFFFF))
+        this.addComponent(new TextDisp(0, 0, "0"));
         this.scene.addSystem(new PlayerMover());
     }
 }
 
-class PlayerMover extends System<[PlayerPhys, Controllable]>
+class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
 {
     update(delta: number): void
     {
-        this.runOnEntities((entity, phys) => {
-            if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
+        this.runOnEntities((entity, phys, _, txt) => {
+            if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft))
+            {
                 entity.transform.x -= 0.1 * delta;
             }
-            if (this.scene.game.keyboard.isKeyDown(Key.KeyD, Key.ArrowRight)) {
+            if (this.scene.game.keyboard.isKeyDown(Key.KeyD, Key.ArrowRight))
+            {
                 entity.transform.x += 0.1 * delta;
             }
+
+            let drag = 0;
+            if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp))
+            {
+                drag = 0.005;
+            }
+            ThingMover.velocity -= ThingMover.velocity * drag * delta;
+            ThingMover.velocity += 0.0001 * delta;
+
+            txt.pixiObj.text = ThingMover.velocity;
         });
     }
 
-    types = [PlayerPhys, Controllable];
+    types = [PlayerPhys, Controllable, TextDisp];
 
 }
