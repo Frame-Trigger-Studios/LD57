@@ -17,7 +17,7 @@ import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
 import ladySpr from "./art/lady.png";
 import tileSpr from "./art/tile.png";
-import {TileGenerator} from "./levelGen/tiles.ts";
+import {SideWalls, TileGenerator} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
@@ -67,6 +67,7 @@ class MainScene extends Scene
 
         // TODO remove me
         this.addEntity(new DemoThings());
+        this.addEntity(new SideWalls());
         // this.addGlobalSystem(new TileGenerator());
     }
 }

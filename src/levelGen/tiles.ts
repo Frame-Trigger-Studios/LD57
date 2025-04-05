@@ -1,4 +1,4 @@
-import {AnimatedSpriteController, Entity, GlobalSystem, Log, MathUtil, RenderRect, Sprite} from "lagom-engine";
+import {AnimatedSpriteController, Component, Entity, GlobalSystem, Log, RenderRect, Sprite, System} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 import {
@@ -124,4 +124,60 @@ export class TileGenerator extends GlobalSystem<[]> {
     }
 
     types = [];
+}
+
+class ResetMe extends Component {
+}
+
+class ResetBlockPos extends System<[ResetMe]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, component) => {
+            if (entity.transform.y < -LD57.GAME_HEIGHT) {
+                entity.transform.y += LD57.GAME_HEIGHT*2;
+            }
+        })
+    }
+
+    types = [ResetMe];
+
+}
+
+export class SideWalls extends Entity {
+    constructor() {
+        super("sideWalls", 0, 0, Layers.FOREGROUND);
+    }
+
+    onAdded() {
+        super.onAdded();
+
+        this.scene.addSystem(new ResetBlockPos());
+
+        // Add a strip of them on each side
+        // We can cheat the physics
+        for (let jj = 0; jj < 2; jj++) {
+            const e = this.addChild(new Entity("wall1", 0, jj * LD57.GAME_HEIGHT, Layers.FOREGROUND));
+            e.addComponent(new MovingThing());
+            e.addComponent(new ResetMe());
+
+            for (let i = 0; i < LD57.GAME_HEIGHT / 12; i++) {
+
+                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                    xOffset: 0,
+                    yOffset: i * 12
+                }));
+                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                    xOffset: 12,
+                    yOffset: i * 12
+                }));
+                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                    xOffset: LD57.GAME_WIDTH - 12,
+                    yOffset: i * 12
+                }));
+                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                    xOffset: LD57.GAME_WIDTH - 24,
+                    yOffset: i * 12
+                }));
+            }
+        }
+    }
 }
