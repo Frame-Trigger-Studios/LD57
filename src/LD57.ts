@@ -2,6 +2,14 @@ import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLev
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
+import {TileGenerator} from "./levelGen/tiles.ts";
+
+export enum Layers {
+    BACKGROUND,
+    FOREGROUND,
+    PLAYER,
+    UI
+}
 
 class TitleScene extends Scene {
     onAdded() {
@@ -27,6 +35,7 @@ class MainScene extends Scene
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+        this.addGlobalSystem(new TileGenerator());
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
 
