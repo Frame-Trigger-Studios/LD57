@@ -52,7 +52,6 @@ class MainScene extends Scene
 
         // TODO remove me
         // this.addEntity(new DemoThings());
-
         this.addGlobalSystem(new TileGenerator());
     }
 }

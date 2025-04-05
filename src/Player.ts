@@ -33,7 +33,7 @@ export class Player extends Entity
 
         this.addComponent(new Controllable())
         this.addComponent(new PlayerPhys())
-        this.addComponent(new TextDisp(0, 0, "0"));
+        this.addComponent(new TextDisp(0, 20, "0", {fill:"red"}));
         this.scene.addSystem(new PlayerMover());
     }
 }
