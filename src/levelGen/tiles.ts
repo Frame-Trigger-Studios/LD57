@@ -30,13 +30,12 @@ export class SolidTile extends Tile {
 
         const textureX = this.tileId % 12;
         const textureY = Math.floor(this.tileId / 12);
-        Log.warn(this.tileId, textureX, textureY)
+
         this.addComponent(new AnimatedSpriteController(0, [
             {
                 id: 0,
                 textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
-
     }
 }
 
