@@ -18,7 +18,7 @@ export class Player extends Entity
 {
     constructor()
     {
-        super("player", 256, 256, Layers.Player);
+        super("player", 144, 144, Layers.Player);
     }
 
     onAdded()
