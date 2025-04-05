@@ -2,13 +2,17 @@ import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLev
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
+import {TileGenerator} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
 import {DemoThings} from "./DemoThings.ts";
 
-export enum Layers
-{
-    Player
+
+export enum Layers {
+    BACKGROUND,
+    FOREGROUND,
+    Player,
+    UI
 }
 
 class TitleScene extends Scene {
@@ -42,7 +46,9 @@ class MainScene extends Scene
         this.addSystem(new ThingMover())
 
         // TODO remove me
-        this.addEntity(new DemoThings());
+        // this.addEntity(new DemoThings());
+
+        this.addGlobalSystem(new TileGenerator());
     }
 }
 
