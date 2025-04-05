@@ -1,4 +1,4 @@
-import {Component, Entity, Key, MathUtil, RenderRect, System, TextDisp} from "lagom-engine";
+import {AnimatedSpriteController, Component, Entity, Key, MathUtil, System, TextDisp} from "lagom-engine";
 import {Layers, LD57} from "./LD57.ts";
 import {ThingMover} from "./MovingThing.ts";
 
@@ -24,9 +24,15 @@ export class Player extends Entity
     onAdded()
     {
         super.onAdded();
+
+        this.addComponent(new AnimatedSpriteController(0, [
+            {
+                id: 0,
+                textures: [this.scene.game.getResource("lady").texture(0, 0, 12, 24)]
+            }]));
+
         this.addComponent(new Controllable())
         this.addComponent(new PlayerPhys())
-        this.addComponent(new RenderRect(0, 0, 8, 16, 0xFFFFFF))
         this.addComponent(new TextDisp(0, 0, "0"));
         this.scene.addSystem(new PlayerMover());
     }

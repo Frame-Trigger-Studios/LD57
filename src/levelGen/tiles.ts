@@ -1,4 +1,13 @@
-import {Component, Entity, Game, GlobalSystem, LagomType, RenderRect, System} from "lagom-engine";
+import {
+    AnimatedSpriteController,
+    Component,
+    Entity,
+    Game,
+    GlobalSystem,
+    LagomType,
+    RenderRect,
+    System
+} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 
@@ -14,7 +23,12 @@ export class SolidTile extends Tile {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new RenderRect(0, 0, 16, 16, 0xFF0000, 0x000000));
+        this.addComponent(new AnimatedSpriteController(0, [
+            {
+                id: 0,
+                textures: [this.scene.game.getResource("tile").texture(0, 0, 12, 12)]
+            }]));
+
     }
 }
 
@@ -26,7 +40,7 @@ export class EmptyTile extends Tile {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new RenderRect(0, 0, 16, 16, null, 0x000000));
+        this.addComponent(new RenderRect(0, 0, 12, 12, null, 0x000000));
     }
 }
 
@@ -39,8 +53,8 @@ export class TileRow extends Entity {
         super.onAdded();
         this.addComponent(new MovingThing());
 
-        const tileWidth = 16;
-        const tileHeight = 16;
+        const tileWidth = 12;
+        const tileHeight = 12;
         const rowLength = LD57.GAME_WIDTH / tileWidth;
         for (let i = 0; i < rowLength; i++) {
             // Blocks on left side
