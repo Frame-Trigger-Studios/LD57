@@ -1,29 +1,55 @@
-import {AnimatedSpriteController, Entity, MathUtil, Timer} from "lagom-engine";
+import {Entity, Log, MathUtil, TiledMapLoader, Timer} from "lagom-engine";
 import {MovingThing} from "./MovingThing.ts";
 import {LD57} from "./LD57.ts";
+import stuff from "./art/sets/stuff.json";
+import {SolidTile} from "./levelGen/tiles.ts";
 
 export class DemoThings extends Entity
 {
+    sets: any[] = [];
+
     constructor()
     {
         super("demo", 0, 0);
+
+        // 47, 48
+        const loader: TiledMapLoader = new TiledMapLoader(stuff);
+
+        let currentSet: number[][] = [];
+
+        loader.loadFn("Tile Layer 1", (tileId, x, y) => {
+            if (tileId == 48)
+            {
+                this.sets.push(currentSet);
+                return;
+            }
+            if (tileId !== 0)
+            {
+                currentSet.push([tileId, x, y]);
+            }
+        })
     }
 
     onAdded()
     {
         super.onAdded();
 
-        this.addComponent(new Timer(500, null, true)).onTrigger.register(caller => {
-            for (let i = 0; i < 15; i++)
-            {
-                let e = this.scene.addEntity(new Entity("space junk", MathUtil.randomRange(0, LD57.GAME_WIDTH), MathUtil.randomRange(LD57.GAME_HEIGHT, LD57.GAME_HEIGHT + LD57.GAME_HEIGHT)));
-                this.addComponent(new AnimatedSpriteController(0, [
-                    {
-                        id: 0,
-                        textures: [this.scene.game.getResource("tile").texture(0, 0, 12, 12)]
-                    }]));
-                e.addComponent(new MovingThing());
-            }
+        this.addComponent(new Timer(1500, null, true)).onTrigger.register(caller => {
+
+            let e = this.scene.addEntity(new Entity("set", 0, LD57.GAME_HEIGHT));
+            e.addComponent(new MovingThing());
+            const set = this.sets[MathUtil.randomRange(0, this.sets.length)];
+
+            // @ts-ignore
+            set.forEach(([tileId, lx, y]) => {
+                const x = lx + 24;
+                // Each tileid represents a spawnable thing/sprite variant.
+                switch (tileId)
+                {
+                    // TODO map to objects
+                }
+                e.addChild(new SolidTile(x, y));
+            })
         });
 
 

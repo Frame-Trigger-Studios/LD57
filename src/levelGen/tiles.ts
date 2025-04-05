@@ -11,6 +11,7 @@ import {
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 
+
 const tileWidth = 12;
 const tileHeight = 12;
 

@@ -14,7 +14,7 @@ export class ThingMover extends System<[MovingThing]>
         this.runOnEntitiesWithSystem((system, entity) => {
             entity.transform.y -= ThingMover.velocity * delta;
 
-            if (entity.transform.y < -100)
+            if (entity.transform.y < -200)
             {
                 entity.destroy();
             }

@@ -1,4 +1,17 @@
-import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLevel, Scene, SpriteSheet, TextDisp, TimerSystem} from 'lagom-engine';
+import {
+    ActionOnPress,
+    AudioAtlas,
+    Entity,
+    FrameTriggerSystem,
+    Game,
+    Log,
+    LogLevel,
+    Scene,
+    SpriteSheet,
+    TextDisp,
+    TiledMapLoader,
+    TimerSystem
+} from 'lagom-engine';
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
@@ -10,6 +23,7 @@ import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import {PaletteSwapper} from "./paletteSwapper.ts";
+import {DemoThings} from "./DemoThings.ts";
 
 
 export enum Layers {
@@ -51,7 +65,7 @@ class MainScene extends Scene
         this.addSystem(new ThingMover())
 
         // TODO remove me
-        // this.addEntity(new DemoThings());
+        this.addEntity(new DemoThings());
         this.addGlobalSystem(new TileGenerator());
     }
 }
