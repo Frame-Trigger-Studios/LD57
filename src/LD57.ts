@@ -3,11 +3,15 @@ import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
 import {TileGenerator} from "./levelGen/tiles.ts";
+import {Player} from "./Player.ts";
+import {ThingMover} from "./MovingThing.ts";
+import {DemoThings} from "./DemoThings.ts";
+
 
 export enum Layers {
     BACKGROUND,
     FOREGROUND,
-    PLAYER,
+    Player,
     UI
 }
 
@@ -39,13 +43,18 @@ class MainScene extends Scene
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
 
+        this.addEntity(new Player());
+        this.addSystem(new ThingMover())
+
+        // TODO remove me
+        this.addEntity(new DemoThings());
     }
 }
 
 export class LD57 extends Game
 {
-    static GAME_WIDTH = 512;
-    static GAME_HEIGHT = 512;
+    static GAME_WIDTH = 288;
+    static GAME_HEIGHT = 288;
 
     static muted = false;
     static musicPlaying = false;
@@ -56,7 +65,7 @@ export class LD57 extends Game
         super({
             width: LD57.GAME_WIDTH,
             height: LD57.GAME_HEIGHT,
-            resolution: 1,
+            resolution: 2,
             backgroundColor: 0x200140
         });
 

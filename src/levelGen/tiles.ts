@@ -1,5 +1,6 @@
 import {Component, Entity, Game, GlobalSystem, LagomType, RenderRect, System} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
+import {MovingThing} from "../MovingThing.ts";
 
 export class Tile extends Entity {
 
@@ -36,6 +37,8 @@ export class TileRow extends Entity {
 
     onAdded() {
         super.onAdded();
+        this.addComponent(new MovingThing());
+
         const tileWidth = 16;
         const tileHeight = 16;
         const rowLength = LD57.GAME_WIDTH / tileWidth;
