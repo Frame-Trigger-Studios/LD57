@@ -2,6 +2,8 @@ import {ActionOnPress, AudioAtlas, Entity, FrameTriggerSystem, Game, Log, LogLev
 import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
+import ladySpr from "./art/lady.png";
+import tileSpr from "./art/tile.png";
 import {TileGenerator} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
@@ -47,7 +49,6 @@ class MainScene extends Scene
 
         // TODO remove me
         // this.addEntity(new DemoThings());
-
         this.addGlobalSystem(new TileGenerator());
     }
 }
@@ -74,6 +75,8 @@ export class LD57 extends Game
         Log.logLevel = LogLevel.WARN;
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
+        this.addResource("tile", new SpriteSheet(tileSpr, 12, 12))
+        this.addResource("lady", new SpriteSheet(ladySpr, 12, 24))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
