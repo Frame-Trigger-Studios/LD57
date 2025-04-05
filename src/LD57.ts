@@ -39,7 +39,6 @@ class MainScene extends Scene
         this.addGUIEntity(new SoundManager());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
-        this.addGlobalSystem(new TileGenerator());
 
         this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
 
@@ -47,7 +46,9 @@ class MainScene extends Scene
         this.addSystem(new ThingMover())
 
         // TODO remove me
-        this.addEntity(new DemoThings());
+        // this.addEntity(new DemoThings());
+
+        this.addGlobalSystem(new TileGenerator());
     }
 }
 

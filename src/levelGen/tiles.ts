@@ -53,7 +53,7 @@ export class TileRow extends Entity {
             }
             // Empty middle
             else {
-                this.addChild(new EmptyTile(i * tileWidth, 0));
+                // this.addChild(new EmptyTile(i * tileWidth, 0));
             }
 
         }
@@ -66,8 +66,9 @@ export class TileGenerator extends GlobalSystem {
 
     update(delta: number): void {
         this.lastSpawn += delta;
-        if (this.lastSpawn > 1000) {
-            this.scene.addEntity(new TileRow(0, 10 + 100));
+        if (this.lastSpawn > 25) {
+            this.scene.addEntity(new TileRow(0, LD57.GAME_HEIGHT + 100));
+            this.lastSpawn = 0;
         }
     }
 
