@@ -2,6 +2,9 @@ import {Component, Entity, Game, GlobalSystem, LagomType, RenderRect, System} fr
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 
+const tileWidth = 16;
+const tileHeight = 16;
+
 export class Tile extends Entity {
 
 }
@@ -39,8 +42,7 @@ export class TileRow extends Entity {
         super.onAdded();
         this.addComponent(new MovingThing());
 
-        const tileWidth = 16;
-        const tileHeight = 16;
+
         const rowLength = LD57.GAME_WIDTH / tileWidth;
         for (let i = 0; i < rowLength; i++) {
             // Blocks on left side
@@ -63,11 +65,13 @@ export class TileRow extends Entity {
 export class TileGenerator extends GlobalSystem {
 
     lastSpawn: number = 0;
-
+    lastSpawned: Entity | undefined = undefined;
     update(delta: number): void {
         this.lastSpawn += delta;
-        if (this.lastSpawn > 25) {
-            this.scene.addEntity(new TileRow(0, LD57.GAME_HEIGHT + 100));
+
+        if (!this.lastSpawned
+            || this.lastSpawn > 25 && this.lastSpawned.transform.y <= LD57.GAME_HEIGHT + 2) {
+            this.lastSpawned = this.scene.addEntity(new TileRow(0, LD57.GAME_HEIGHT + tileHeight));
             this.lastSpawn = 0;
         }
     }
