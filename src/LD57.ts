@@ -26,8 +26,11 @@ import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
+import barSpr from "./art/speedbar.png"
+import barIndicatorSpr from "./art/bar_indicator.png"
 import {DemoThings} from "./DemoThings.ts";
 import {ScoreDisplay, ScoreText} from "./ui/score";
+import {SpeedDisplay} from "./ui/speed.ts";
 
 
 export enum Layers {
@@ -103,6 +106,7 @@ export class MainScene extends Scene {
 
         this.addGUIEntity(new Diagnostics("red", 4, true));
         this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 10, 10));
+        this.addGUIEntity(new SpeedDisplay());
     }
 }
 
@@ -134,6 +138,8 @@ export class LD57 extends Game {
         this.addResource("coin", new SpriteSheet(coinSpr, 12, 12))
         this.addResource("inputPalette", new SpriteSheet(inputPaletteSpr, 4, 1))
         this.addResource("outputPalette", new SpriteSheet(outputPaletteSpr, 4, 1))
+        this.addResource("bar", new SpriteSheet(barSpr, 16, 144))
+        this.addResource("bar_indicator", new SpriteSheet(barIndicatorSpr, 16, 11))
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
