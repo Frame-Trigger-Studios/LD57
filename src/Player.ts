@@ -78,6 +78,10 @@ export class PlayerMover extends System<[PlayerPhys, Controllable]> {
 
     update(delta: number): void {
         this.runOnEntities((entity, phys) => {
+            if (entity.getComponent(Dead) !== null) {
+                return;
+            }
+
             if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
                 phys.sideVelocity -= this.sideInc;
             }
@@ -107,5 +111,10 @@ export class PlayerMover extends System<[PlayerPhys, Controllable]> {
     }
 
     types = [PlayerPhys, Controllable];
+
+}
+
+export class Dead extends Component
+{
 
 }
