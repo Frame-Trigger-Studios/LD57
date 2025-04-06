@@ -37,6 +37,7 @@ import barIndicatorSpr from "./art/bar_indicator.png"
 import {BackgroundEntity, DemoThings} from "./DemoThings.ts";
 import {ScoreDisplay} from "./ui/score";
 import {SpeedDisplay} from "./ui/speed.ts";
+import {ScoreTimer} from "./ui/timer.ts";
 
 
 export enum Layers {
@@ -89,7 +90,7 @@ export class MainScene extends Scene {
 
 
         this.addGlobalSystem(MainScene.physics);
-        this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
+        // this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
 
 
         this.addGUIEntity(new SoundManager());
@@ -110,9 +111,10 @@ export class MainScene extends Scene {
         this.addEntity(new SideWalls());
         // this.addGlobalSystem(new TileGenerator());
 
-        this.addGUIEntity(new Diagnostics("red", 4, true));
+        // this.addGUIEntity(new Diagnostics("red", 4, true));
         this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 10, 10));
         this.addGUIEntity(new SpeedDisplay());
+        this.addGUIEntity(new ScoreTimer());
         this.addEntity(new Entity("side_background", LD57.GAME_WIDTH, 0, Layers.BACKGROUND))
             .addComponent(new RenderRect(0, 0, LD57.VIEW_WIDTH - LD57.GAME_WIDTH, LD57.GAME_HEIGHT, 0x594f7d, 0x594f7d));
     }
