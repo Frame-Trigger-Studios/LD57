@@ -200,7 +200,7 @@ export class Coin extends Entity {
             if (data.other.layer == Layers.PLAYER) {
                 this.destroy();
                 let score: ScoreText[] | undefined = this.getScene().getEntityWithName("scoreboard")?.getComponentsOfType<ScoreText>(ScoreText);
-                score?.pop()?.addScore(10);
+                score?.pop()?.addScore(100);
 
             }
         })

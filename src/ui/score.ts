@@ -1,5 +1,7 @@
-import {Entity, TextDisp} from "lagom-engine";
+import {Entity, TextDisp, Timer} from "lagom-engine";
 import * as PIXI from "pixi.js";
+import {ThingMover} from "../MovingThing.ts";
+import {PlayerMover} from "../Player.ts";
 
 export class ScoreText extends TextDisp {
     private score: number;
@@ -12,24 +14,29 @@ export class ScoreText extends TextDisp {
 
     addScore(score: number) {
         this.score += score;
-        this.pixiObj.text = this.prefix + this.score
+        this.pixiObj.text = this.prefix + this.score.toFixed(0)
     }
 }
 
 export class ScoreDisplay extends Entity {
 
     constructor(x: number, y: number) {
-        super("scoreboard", x, y, );
+        super("scoreboard", x, y,);
     }
 
     onAdded() {
         super.onAdded();
         this.addComponent(new TextDisp(0, 0, "", {dropShadowDistance: 10}))
-        this.addComponent(new ScoreText(0, 0, "Score: ", {
-            fontFamily: "pixeloid",
+        const score = this.addComponent(new ScoreText(0, 0, "Score: ", {
+            fontFamily: "retro",
             fill: 0xfaf0b9,
             fontSize: 12,
         }));
+
+        this.addComponent(new Timer(100, score, true)).onTrigger.register((caller, data) => {
+            const multiplier = (ThingMover.velocity - PlayerMover.minSpeed) / (PlayerMover.maxSpeed - PlayerMover.minSpeed);
+            data.addScore(1 * (1 + multiplier));
+        })
     }
 }
 
