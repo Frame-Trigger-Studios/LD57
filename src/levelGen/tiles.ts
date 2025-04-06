@@ -12,7 +12,7 @@ import {
     System
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "../LD57.ts";
-import {MovingThing} from "../MovingThing.ts";
+import {MovingThing, ThingMover} from "../MovingThing.ts";
 import {
     generateStructure,
     getDefaultRow,
@@ -21,7 +21,7 @@ import {
     VoidStructure
 } from "./structures.ts";
 import {ScoreText} from "../ui/score";
-import {Boost, Player} from "../Player";
+import {Boost, Dead, Player} from "../Player";
 
 export const tileWidth = 12;
 export const tileHeight = 12;
@@ -46,143 +46,149 @@ export class SolidTile extends Entity {
                 textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
 
+        let collider: PolyCollider | undefined = undefined;
+
         switch (this.tileId) {
             // Rect
             case 0:
-                this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
+                collider = this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
                 break;
             case 1:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [12, 0], [0, 12]]
                 }));
                 break;
             case 2:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [12, 0], [12, 12]]
                 }));
                 break;
             case 3:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [0, 12], [12, 12]]
                 }));
                 break;
             case 4:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[12, 0], [0, 12], [12, 12]]
                 }));
                 break;
             case 5:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [12, 6], [12, 12], [0, 12]]
                 }));
                 break;
             case 6:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 6], [12, 12], [0, 12]]
                 }));
                 break;
             case 7:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[12, 6], [12, 12], [0, 12]]
                 }));
                 break;
             case 8:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 6], [12, 0], [12, 12], [0, 12]]
                 }));
                 break;
             case 12:
             case 14:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[12, 0], [12, 12], [8, 12]]
                 }));
                 break;
             case 13:
             case 15:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [4, 12], [0, 12]]
                 }));
                 break;
             case 24:
             case 26:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[8, 0], [12, 0], [12, 12], [4, 12]]
                 }));
                 break;
             case 25:
             case 27:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [4, 0], [8, 12], [0, 12]]
                 }));
                 break;
             case 18:
             case 28:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[4, 0], [12, 0], [12, 12], [8, 12]]
                 }));
                 break;
             case 19:
             case 29:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [8, 0], [4, 12], [0, 12]]
                 }));
                 break;
             case 40:
             case 30:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[8, 0], [12, 0], [12, 12]]
                 }));
                 break;
             case 41:
             case 31:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [4, 0], [0, 12]]
                 }));
                 break;
             case 36:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[4, 0], [12, 0], [12, 12], [0, 12]]
                 }));
                 break;
             case 37:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [8, 0], [12, 12], [0, 12]]
                 }));
                 break;
             case 16:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [12, 0], [12, 12], [4, 12]]
                 }));
                 break;
             case 17:
-                this.addComponent(new PolyCollider(MainScene.physics, {
+                collider = this.addComponent(new PolyCollider(MainScene.physics, {
                     layer: Layers.BLOCK,
                     points: [[0, 0], [12, 0], [8, 12], [0, 12]]
                 }));
                 break;
-
         }
 
-
+        collider?.onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.PLAYER) {
+                (<Player>data.other.parent).addComponent(new Dead());
+                ThingMover.gameOver = true;
+            }
+        })
     }
 }
 
@@ -339,7 +345,7 @@ class ResetBlockPos extends System<[ResetMe]> {
 
 export class SideWalls extends Entity {
     constructor() {
-        super("sideWalls", 0, 0, Layers.FOREGROUND);
+        super("sideWalls", 0, 0, Layers.BLOCK);
     }
 
     onAdded() {
@@ -352,13 +358,21 @@ export class SideWalls extends Entity {
             layer: Layers.BLOCK,
             height: LD57.GAME_HEIGHT,
             width: 24
-        }));
+        })).onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.PLAYER) {
+                data.other.parent.transform.x = 24;
+            }
+        });
         wallColliders.addComponent(new RectCollider(MainScene.physics, {
             xOff: LD57.GAME_WIDTH - 24,
             layer: Layers.BLOCK,
             height: LD57.GAME_HEIGHT,
             width: 24
-        }));
+        })).onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.PLAYER) {
+                data.other.parent.transform.x = LD57.GAME_WIDTH - 24 - data.other.parent.transform.width;
+            }
+        });
 
         if (LD57.DEBUG) {
             wallColliders.addComponent(new RenderRect(0, 0, 24, LD57.GAME_HEIGHT));
