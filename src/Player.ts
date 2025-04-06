@@ -1,28 +1,32 @@
-import {AnimatedSpriteController, Component, Entity, Key, MathUtil, System, TextDisp} from "lagom-engine";
-import {Layers, LD57} from "./LD57.ts";
+import {
+    AnimatedSpriteController,
+    CircleCollider,
+    Component,
+    Entity,
+    Key,
+    MathUtil,
+    RenderCircle,
+    System,
+    TextDisp
+} from "lagom-engine";
+import {Layers, LD57, MainScene} from "./LD57.ts";
 import {ThingMover} from "./MovingThing.ts";
 
-class Controllable extends Component
-{
+class Controllable extends Component {
 }
 
-class PlayerPhys extends Component
-{
-    constructor(public sideVelocity: number = 0)
-    {
+class PlayerPhys extends Component {
+    constructor(public sideVelocity: number = 0) {
         super();
     }
 }
 
-export class Player extends Entity
-{
-    constructor()
-    {
-        super("player", LD57.GAME_WIDTH / 2, (LD57.GAME_HEIGHT / 8), Layers.Player);
+export class Player extends Entity {
+    constructor() {
+        super("player", LD57.GAME_WIDTH / 2, (LD57.GAME_HEIGHT / 8), Layers.PLAYER);
     }
 
-    onAdded()
-    {
+    onAdded() {
         super.onAdded();
 
         this.addComponent(new AnimatedSpriteController(0, [
@@ -31,15 +35,19 @@ export class Player extends Entity
                 textures: [this.scene.game.getResource("lady").texture(0, 0, 12, 24)]
             }]));
 
+        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, xOff: 6, yOff: 16}));
+        if (LD57.DEBUG) {
+            this.addComponent(new RenderCircle(6, 16, 4));
+        }
+
         this.addComponent(new Controllable())
         this.addComponent(new PlayerPhys())
-        this.addComponent(new TextDisp(0, 20, "0", {fill:"red"}));
+        this.addComponent(new TextDisp(0, 20, "0", {fill: "red"}));
         this.scene.addSystem(new PlayerMover());
     }
 }
 
-class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
-{
+class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]> {
     minSpeed = 0.04;
     maxSpeed = 0.5;
 
@@ -50,15 +58,12 @@ class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
     acceleration = 0.00001;
     drag = 0.002;
 
-    update(delta: number): void
-    {
+    update(delta: number): void {
         this.runOnEntities((entity, phys, _, txt) => {
-            if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft))
-            {
+            if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
                 phys.sideVelocity -= this.sideInc;
             }
-            if (this.scene.game.keyboard.isKeyDown(Key.KeyD, Key.ArrowRight))
-            {
+            if (this.scene.game.keyboard.isKeyDown(Key.KeyD, Key.ArrowRight)) {
                 phys.sideVelocity += this.sideInc;
             }
 
@@ -68,8 +73,7 @@ class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
 
 
             let drag = 0;
-            if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp))
-            {
+            if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp)) {
                 drag = this.drag;
             }
             let oldVel = ThingMover.velocity;

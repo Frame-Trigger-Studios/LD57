@@ -1,5 +1,16 @@
-import {AnimatedSpriteController, Component, Entity, GlobalSystem, RenderRect, Sprite, System} from "lagom-engine";
-import {Layers, LD57} from "../LD57.ts";
+import {
+    AnimatedSpriteController,
+    CircleCollider,
+    Component,
+    Entity,
+    GlobalSystem,
+    RectCollider,
+    RenderCircle,
+    RenderRect,
+    Sprite,
+    System
+} from "lagom-engine";
+import {Layers, LD57, MainScene} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 import {
     generateStructure,
@@ -17,7 +28,7 @@ export const tileHeight = 12;
 export class SolidTile extends Entity {
 
     constructor(x: number, y: number, readonly tileId: number) {
-        super("solidTile", x, y, Layers.FOREGROUND);
+        super("solidTile", x, y, Layers.BLOCK);
     }
 
     onAdded() {
@@ -31,18 +42,26 @@ export class SolidTile extends Entity {
                 id: 0,
                 textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
+
+        this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
+        this.addComponent(new RenderRect(0, 0, 12, 12));
     }
 }
 
 export class Coin extends Entity {
 
     constructor(x: number, y: number) {
-        super("coin", x, y, Layers.FOREGROUND);
+        super("coin", x, y, Layers.COIN);
     }
 
     onAdded() {
         super.onAdded();
         this.addComponent(new Sprite(this.scene.game.getResource("coin").textureFromIndex(0)));
+        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.COIN, xOff: 6, yOff: 6, radius: 10}))
+
+        if (LD57.DEBUG) {
+            this.addComponent(new RenderCircle(6, 6, 10))
+        }
     }
 }
 
@@ -145,6 +164,24 @@ export class SideWalls extends Entity {
         super.onAdded();
 
         this.scene.addSystem(new ResetBlockPos());
+
+        const wallColliders = this.scene.addEntity(new Entity("wall_colliders"));
+        wallColliders.addComponent(new RectCollider(MainScene.physics, {
+            layer: Layers.BLOCK,
+            height: LD57.GAME_HEIGHT,
+            width: 24
+        }));
+        wallColliders.addComponent(new RectCollider(MainScene.physics, {
+            xOff: LD57.GAME_WIDTH - 24,
+            layer: Layers.BLOCK,
+            height: LD57.GAME_HEIGHT,
+            width: 24
+        }));
+
+        if (LD57.DEBUG) {
+            wallColliders.addComponent(new RenderRect(0, 0, 24, LD57.GAME_HEIGHT));
+            wallColliders.addComponent(new RenderRect(LD57.GAME_WIDTH - 24, 0, 24, LD57.GAME_HEIGHT));
+        }
 
         // Add a strip of them on each side
         // We can cheat the physics
