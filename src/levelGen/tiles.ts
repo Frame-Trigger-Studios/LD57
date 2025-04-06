@@ -3,7 +3,7 @@ import {
     CircleCollider,
     Component,
     Entity,
-    GlobalSystem,
+    GlobalSystem, PolyCollider,
     RectCollider,
     RenderCircle,
     RenderRect,
@@ -43,8 +43,83 @@ export class SolidTile extends Entity {
                 textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
             }]));
 
-        this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
-        this.addComponent(new RenderRect(0, 0, 12, 12));
+        switch (this.tileId) {
+            // Rect
+            case 0:
+                this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
+                break;
+            case 1:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [12, 0], [0, 12]]}));
+                break;
+            case 2:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [12, 0], [12, 12]]}));
+                break;
+            case 3:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [0, 12], [12, 12]]}));
+                break;
+            case 4:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[12, 0], [0, 12], [12, 12]]}));
+                break;
+            case 5:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [12, 6], [12, 12], [0, 12]]}));
+                break;
+            case 6:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 6], [12, 12], [0, 12]]}));
+                break;
+            case 7:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[12, 6], [12, 12], [0, 12]]}));
+                break;
+            case 8:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 6], [12, 0], [12, 12], [0, 12]]}));
+                break;
+            case 12:
+            case 14:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[12, 0], [12, 12], [8, 12]]}));
+                break;
+            case 13:
+            case 15:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [4, 12], [0, 12]]}));
+                break;
+            case 24:
+            case 26:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[8, 0], [12, 0], [12, 12], [4, 12]]}));
+                break;
+            case 25:
+            case 27:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [4, 0], [8, 12], [0, 12]]}));
+                break;
+            case 18:
+            case 28:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[4, 0], [12, 0], [12, 12], [8, 12]]}));
+                break;
+            case 19:
+            case 29:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [8, 0], [4, 12], [0, 12]]}));
+                break;
+            case 40:
+            case 30:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[8, 0], [12, 0], [12, 12]]}));
+                break;
+            case 41:
+            case 31:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [4, 0], [0, 12]]}));
+                break;
+            case 36:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[4, 0], [12, 0], [12, 12], [0, 12]]}));
+                break;
+            case 37:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [8, 0], [12, 12], [0, 12]]}));
+                break;
+            case 16:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [12, 0], [12, 12], [4, 12]]}));
+                break;
+            case 17:
+                this.addComponent(new PolyCollider(MainScene.physics, {layer: Layers.BLOCK, points: [[0, 0], [12, 0], [8, 12], [0, 12]]}));
+                break;
+
+        }
+
+
     }
 }
 
