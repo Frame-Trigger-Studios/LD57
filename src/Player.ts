@@ -47,6 +47,9 @@ class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
     sideDrag = 0.008;
     sideMax = 0.2;
 
+    acceleration = 0.00001;
+    drag = 0.002;
+
     update(delta: number): void
     {
         this.runOnEntities((entity, phys, _, txt) => {
@@ -67,18 +70,18 @@ class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]>
             let drag = 0;
             if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp))
             {
-                drag = 0.001;
+                drag = this.drag;
             }
             let oldVel = ThingMover.velocity;
             ThingMover.velocity -= ThingMover.velocity * drag * delta;
-            ThingMover.velocity += 0.0001 * delta;
+            ThingMover.velocity += this.acceleration * delta;
             ThingMover.velocity = MathUtil.clamp(ThingMover.velocity, this.minSpeed, this.maxSpeed)
 
             // Based on the acceleration this frame, move slightly up or down from the middle.
-            let accel = ThingMover.velocity - oldVel;
-            entity.transform.y += accel * 12 * delta;
+            let frameAccel = ThingMover.velocity - oldVel;
+            entity.transform.y += frameAccel * 12 * delta;
 
-            txt.pixiObj.text = `${ThingMover.velocity}`;
+            txt.pixiObj.text = `${ThingMover.velocity.toFixed(2)}`;
         });
     }
 

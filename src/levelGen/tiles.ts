@@ -1,4 +1,4 @@
-import {AnimatedSpriteController, Component, Entity, GlobalSystem, Log, RenderRect, Sprite, System} from "lagom-engine";
+import {AnimatedSpriteController, Component, Entity, GlobalSystem, RenderRect, Sprite, System} from "lagom-engine";
 import {Layers, LD57} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
 import {
@@ -14,12 +14,7 @@ export const tileHeight = 12;
 
 // export const NUM_TILE_WIDE = LD57.GAME_WIDTH / tileWidth;
 
-
-export class Tile extends Entity {
-
-}
-
-export class SolidTile extends Tile {
+export class SolidTile extends Entity {
 
     constructor(x: number, y: number, readonly tileId: number) {
         super("solidTile", x, y, Layers.FOREGROUND);
@@ -39,7 +34,7 @@ export class SolidTile extends Tile {
     }
 }
 
-export class Coin extends Tile {
+export class Coin extends Entity {
 
     constructor(x: number, y: number) {
         super("coin", x, y, Layers.FOREGROUND);
@@ -51,7 +46,7 @@ export class Coin extends Tile {
     }
 }
 
-export class EmptyTile extends Tile {
+export class EmptyTile extends Entity {
 
     constructor(x: number, y: number) {
         super("emptyTile", x, y, Layers.FOREGROUND);
@@ -132,7 +127,7 @@ class ResetBlockPos extends System<[ResetMe]> {
     update(delta: number): void {
         this.runOnEntities((entity, component) => {
             if (entity.transform.y < -LD57.GAME_HEIGHT) {
-                entity.transform.y += LD57.GAME_HEIGHT*2;
+                entity.transform.y += LD57.GAME_HEIGHT * 2;
             }
         })
     }

@@ -1,6 +1,6 @@
 import {
     ActionOnPress,
-    AudioAtlas,
+    AudioAtlas, Diagnostics,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -69,6 +69,8 @@ class MainScene extends Scene
         this.addEntity(new DemoThings());
         this.addEntity(new SideWalls());
         // this.addGlobalSystem(new TileGenerator());
+
+        this.addGUIEntity(new Diagnostics("red", 4, true))
     }
 }
 
