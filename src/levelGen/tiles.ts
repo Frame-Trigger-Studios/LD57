@@ -14,7 +14,7 @@ import {
     System
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "../LD57.ts";
-import {MovingThing, ThingMover} from "../MovingThing.ts";
+import {MovingThing} from "../MovingThing.ts";
 import {
     generateStructure,
     getDefaultRow,
@@ -23,7 +23,7 @@ import {
     VoidStructure
 } from "./structures.ts";
 import {ScoreText} from "../ui/score";
-import {Boost, Dead, Player} from "../Player";
+import {Boost, Player} from "../Player";
 import {Texture} from "pixi.js";
 
 export const tileWidth = 12;
@@ -206,13 +206,6 @@ export class SolidTile extends Entity {
                 }));
                 break;
         }
-
-        collider?.onTrigger.register((caller, data) => {
-            if (data.other.layer == Layers.PLAYER) {
-                (<Player>data.other.parent).addComponent(new Dead());
-                ThingMover.gameOver = true;
-            }
-        })
     }
 }
 
@@ -391,21 +384,13 @@ export class SideWalls extends Entity {
             layer: Layers.BLOCK,
             height: LD57.GAME_HEIGHT,
             width: 24
-        })).onTrigger.register((caller, data) => {
-            if (data.other.layer == Layers.PLAYER) {
-                data.other.parent.transform.x = 24;
-            }
-        });
+        }));
         wallColliders.addComponent(new RectCollider(MainScene.physics, {
             xOff: LD57.GAME_WIDTH - 24,
             layer: Layers.BLOCK,
             height: LD57.GAME_HEIGHT,
             width: 24
-        })).onTrigger.register((caller, data) => {
-            if (data.other.layer == Layers.PLAYER) {
-                data.other.parent.transform.x = LD57.GAME_WIDTH - 24 - data.other.parent.transform.width;
-            }
-        });
+        }));
 
         if (LD57.DEBUG) {
             wallColliders.addComponent(new RenderRect(0, 0, 24, LD57.GAME_HEIGHT));

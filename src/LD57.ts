@@ -2,8 +2,6 @@ import {
     ActionOnPress,
     AudioAtlas,
     CollisionMatrix,
-    DebugCollisionSystem,
-    Diagnostics,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
@@ -12,6 +10,7 @@ import {
     LogLevel,
     RenderRect,
     Scene,
+    ScreenShaker,
     SpriteSheet,
     TextDisp,
     TimerSystem
@@ -90,6 +89,8 @@ export class MainScene extends Scene {
     onAdded() {
         super.onAdded();
 
+        this.addGUIEntity(new Entity("side_background", LD57.GAME_WIDTH, 0, Layers.BACKGROUND))
+            .addComponent(new RenderRect(0, 0, LD57.VIEW_WIDTH - LD57.GAME_WIDTH, LD57.GAME_HEIGHT, 0x594f7d, 0x594f7d));
 
         this.addGlobalSystem(MainScene.physics);
         // this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
@@ -99,6 +100,7 @@ export class MainScene extends Scene {
         // this.addGlobalSystem(new PaletteSwapper());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
+        this.addGlobalSystem(new ScreenShaker(LD57.GAME_WIDTH / 2, LD57.GAME_HEIGHT / 2));
 
         // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
         //     fontFamily: "pixeloid",
@@ -117,8 +119,6 @@ export class MainScene extends Scene {
         this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
         this.addGUIEntity(new SpeedDisplay());
         this.addGUIEntity(new ScoreTimer());
-        this.addEntity(new Entity("side_background", LD57.GAME_WIDTH, 0, Layers.BACKGROUND))
-            .addComponent(new RenderRect(0, 0, LD57.VIEW_WIDTH - LD57.GAME_WIDTH, LD57.GAME_HEIGHT, 0x594f7d, 0x594f7d));
     }
 }
 

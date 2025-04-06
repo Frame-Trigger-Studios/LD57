@@ -6,7 +6,9 @@ import {
     Key,
     MathUtil,
     RenderCircle,
-    System
+    ScreenShake,
+    System,
+    Timer
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "./LD57.ts";
 import {ThingMover} from "./MovingThing.ts";
@@ -18,6 +20,13 @@ class PlayerPhys extends Component {
     constructor(public sideVelocity: number = 0, public lastFrameVel: number = 0) {
         super();
     }
+}
+
+class SpinMe extends Component {
+    constructor(readonly dir: number) {
+        super();
+    }
+
 }
 
 export class Player extends Entity {
@@ -41,14 +50,33 @@ export class Player extends Entity {
             },
         ]));
 
-        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, yOff: 16}));
+        const phys = this.addComponent(new PlayerPhys())
+
+        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, yOff: 16}))
+            .onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.BLOCK) {
+
+                if (this.getComponent(SpinMe) != null) {
+                    return;
+                }
+
+                caller.parent.addComponent(new ScreenShake(0.5, 2000))
+                ThingMover.velocity = 0;
+
+                // Disable collisions and spin for 2 seconds.
+                const spinner = this.addComponent(new SpinMe(phys.sideVelocity))
+                this.addComponent(new Timer(2000, spinner)).onTrigger.register((caller1, data1) => {
+                    data1.destroy();
+                })
+            }
+        })
         if (LD57.DEBUG) {
             this.addComponent(new RenderCircle(0, 16, 4));
         }
 
         this.addComponent(new Controllable())
-        this.addComponent(new PlayerPhys())
         this.scene.addSystem(new Booster());
+        this.scene.addSystem(new Spinner());
         this.scene.addSystem(new PlayerMover());
     }
 }
@@ -71,6 +99,20 @@ class Booster extends System<[Boost]> {
 
 }
 
+class Spinner extends System<[SpinMe, AnimatedSpriteController]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, spin, spr) => {
+
+            // @ts-ignore
+            spr.applyConfig({rotation: spr.sprite.pixiObj.rotation + Math.sign(spin.dir) * 0.01 * delta})
+        })
+    }
+
+    types = [SpinMe, AnimatedSpriteController];
+
+}
+
+
 export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSpriteController]> {
     static minSpeed = 0.04;
     static maxSpeed = 0.5;
@@ -84,11 +126,11 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
 
     update(delta: number): void {
         this.runOnEntities((entity, phys, _, spr) => {
-            if (entity.getComponent(Dead) !== null) {
-                return;
-            }
 
-            spr.applyConfig({rotation: -phys.sideVelocity})
+            const spinning = entity.getComponent<SpinMe>(SpinMe) !== null;
+            if (!spinning) {
+                spr.applyConfig({rotation: -phys.sideVelocity})
+            }
 
             if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
                 phys.sideVelocity -= this.sideInc;
@@ -101,6 +143,9 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             phys.sideVelocity = MathUtil.clamp(phys.sideVelocity, -this.sideMax, this.sideMax);
             entity.transform.x += phys.sideVelocity * delta;
 
+            // Stay in the game window
+            entity.transform.x = MathUtil.clamp(entity.transform.x, 12, LD57.GAME_WIDTH - 12);
+
 
             let drag = 0;
             if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp)) {
@@ -108,7 +153,11 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             }
 
             ThingMover.velocity -= ThingMover.velocity * drag * delta;
-            ThingMover.velocity += this.acceleration * delta;
+
+            // Don't increase speed if we are spinning
+            if (!spinning) {
+                ThingMover.velocity += this.acceleration * delta;
+            }
             ThingMover.velocity = MathUtil.clamp(ThingMover.velocity, PlayerMover.minSpeed, PlayerMover.maxSpeed)
 
             // Based on the acceleration this frame, move slightly up or down from the middle.
@@ -116,7 +165,7 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             entity.transform.y += frameAccel * 12 * delta;
             phys.lastFrameVel = ThingMover.velocity;
 
-            if (frameAccel <= 0 || ThingMover.velocity < 0.042) {
+            if (frameAccel < 0 || ThingMover.velocity < 0.042) {
                 spr.setAnimation(1, false);
             } else {
                 spr.setAnimation(0, false);
