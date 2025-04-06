@@ -1,4 +1,5 @@
 import {
+    AnimatedSprite,
     CircleCollider,
     Component,
     Entity,
@@ -210,7 +211,9 @@ export class Coin extends Entity {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new Sprite(this.scene.game.getResource("coin").textureFromIndex(0)));
+        this.addComponent(new AnimatedSprite(this.scene.game.getResource("coin").textureSliceFromSheet(), {
+            animationSpeed: 100,
+        }))
         this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.COIN, xOff: 6, yOff: 6, radius: 10}))
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
