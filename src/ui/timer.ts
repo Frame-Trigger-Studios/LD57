@@ -20,8 +20,8 @@ export class ScoreTimer extends Entity {
         this.addComponent(new Timer(1000, txt, true)).onTrigger.register((caller, txt) => {
             roundTime -= 1;
 
-            const mins = Math.floor(roundTime / 60);
-            const secs = roundTime % 60;
+            const mins = Math.max(0, Math.floor(roundTime / 60));
+            const secs = Math.max(0, roundTime % 60);
             txt.pixiObj.text = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         })
 

@@ -116,10 +116,10 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             entity.transform.y += frameAccel * 12 * delta;
             phys.lastFrameVel = ThingMover.velocity;
 
-            if (frameAccel > 0) {
-                spr.setAnimation(0, false);
-            } else {
+            if (frameAccel <= 0 || ThingMover.velocity < 0.042) {
                 spr.setAnimation(1, false);
+            } else {
+                spr.setAnimation(0, false);
             }
         });
     }
