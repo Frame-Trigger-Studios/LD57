@@ -23,6 +23,8 @@ import ladySpr from "./art/lady.png";
 import ladyFallSpr from "./art/lady_falling.png";
 import ladyParaSpr from "./art/lady_parasol.png";
 import tileSpr from "./art/tile.png";
+import squareTileSpr from "./art/square_tiles.png";
+import bgTileSpr from "./art/bg_tile.png";
 import {SideWalls} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
@@ -139,6 +141,8 @@ export class LD57 extends Game {
 
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("tile", new SpriteSheet(tileSpr, 12, 12))
+        this.addResource("sq_tile", new SpriteSheet(squareTileSpr, 12, 12))
+        this.addResource("bg_tile", new SpriteSheet(bgTileSpr, 12, 12))
         this.addResource("lady", new SpriteSheet(ladySpr, 12, 24))
         this.addResource("lady_falling", new SpriteSheet(ladyFallSpr, 36, 48))
         this.addResource("lady_para", new SpriteSheet(ladyParaSpr, 36, 48))

@@ -1,14 +1,15 @@
 import {
-    AnimatedSpriteController,
     CircleCollider,
     Component,
     Entity,
     GlobalSystem,
+    MathUtil,
     PolyCollider,
     RectCollider,
     RenderCircle,
     RenderRect,
     Sprite,
+    SpriteConfig,
     System
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "../LD57.ts";
@@ -22,6 +23,7 @@ import {
 } from "./structures.ts";
 import {ScoreText} from "../ui/score";
 import {Boost, Dead, Player} from "../Player";
+import {Texture} from "pixi.js";
 
 export const tileWidth = 12;
 export const tileHeight = 12;
@@ -40,18 +42,26 @@ export class SolidTile extends Entity {
         const textureX = this.tileId % 12;
         const textureY = Math.floor(this.tileId / 12);
 
-        this.addComponent(new AnimatedSpriteController(0, [
-            {
-                id: 0,
-                textures: [this.scene.game.getResource("tile").texture(textureX, textureY)]
-            }]));
+        let sprite = null;
+        if (this.tileId == 0) {
+            sprite = this.scene.game.getResource("sq_tile").texture(MathUtil.randomRange(0, 48), 0);
+        } else {
+            sprite = this.scene.game.getResource("tile").texture(textureX, textureY);
+        }
+
+
+        this.addComponent(new Sprite(sprite));
 
         let collider: PolyCollider | undefined = undefined;
 
         switch (this.tileId) {
             // Rect
             case 0:
-                collider = this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.BLOCK, width: 12, height: 12}))
+                collider = this.addComponent(new RectCollider(MainScene.physics, {
+                    layer: Layers.BLOCK,
+                    width: 12,
+                    height: 12
+                }))
                 break;
             case 1:
                 collider = this.addComponent(new PolyCollider(MainScene.physics, {
@@ -335,6 +345,9 @@ class ResetBlockPos extends System<[ResetMe]> {
         this.runOnEntities((entity, component) => {
             if (entity.transform.y < -LD57.GAME_HEIGHT) {
                 entity.transform.y += LD57.GAME_HEIGHT * 2;
+                entity.getComponentsOfType<VariantSprite>(VariantSprite)?.forEach((spr) => {
+                    spr.reroll()
+                })
             }
         })
     }
@@ -379,6 +392,8 @@ export class SideWalls extends Entity {
             wallColliders.addComponent(new RenderRect(LD57.GAME_WIDTH - 24, 0, 24, LD57.GAME_HEIGHT));
         }
 
+        const tilset = this.scene.game.getResource("sq_tile");
+
         // Add a strip of them on each side
         // We can cheat the physics
         for (let jj = 0; jj < 2; jj++) {
@@ -388,23 +403,34 @@ export class SideWalls extends Entity {
 
             for (let i = 0; i < LD57.GAME_HEIGHT / 12; i++) {
 
-                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                e.addComponent(new VariantSprite(tilset.textureSliceFromRow(0, 0, 47), {
                     xOffset: 0,
-                    yOffset: i * 12
+                    yOffset: i * 12,
                 }));
-                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                e.addComponent(new VariantSprite(tilset.textureSliceFromRow(0, 0, 47), {
                     xOffset: 12,
-                    yOffset: i * 12
+                    yOffset: i * 12,
                 }));
-                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                e.addComponent(new VariantSprite(tilset.textureSliceFromRow(0, 0, 47), {
                     xOffset: LD57.GAME_WIDTH - 12,
-                    yOffset: i * 12
+                    yOffset: i * 12,
                 }));
-                e.addComponent(new Sprite(this.scene.game.getResource("tile").textureFromIndex(0), {
+                e.addComponent(new VariantSprite(tilset.textureSliceFromRow(0, 0, 47), {
                     xOffset: LD57.GAME_WIDTH - 24,
-                    yOffset: i * 12
+                    yOffset: i * 12,
                 }));
             }
         }
+    }
+}
+
+
+class VariantSprite extends Sprite {
+    constructor(readonly textures: Texture[], config: SpriteConfig) {
+        super(textures[MathUtil.randomRange(0, textures.length)], config);
+    }
+
+    reroll() {
+        this.pixiObj.texture = this.textures[MathUtil.randomRange(0, this.textures.length)];
     }
 }
