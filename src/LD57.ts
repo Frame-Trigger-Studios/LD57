@@ -25,6 +25,7 @@ import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
 import {PaletteSwapper} from "./paletteSwapper.ts";
 import {DemoThings} from "./DemoThings.ts";
+import {ScoreDisplay, ScoreText} from "./ui/score";
 
 
 export enum Layers {
@@ -60,17 +61,18 @@ class MainScene extends Scene
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
+        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
 
         this.addEntity(new Player());
-        this.addSystem(new ThingMover())
+        this.addSystem(new ThingMover());
 
         // TODO remove me
         this.addEntity(new DemoThings());
         this.addEntity(new SideWalls());
         // this.addGlobalSystem(new TileGenerator());
 
-        this.addGUIEntity(new Diagnostics("red", 4, true))
+        this.addGUIEntity(new Diagnostics("red", 4, true));
+        this.addGUIEntity(new ScoreDisplay(30, LD57.GAME_HEIGHT - 30));
     }
 }
 
