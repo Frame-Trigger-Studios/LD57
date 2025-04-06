@@ -251,7 +251,9 @@ export class SpeedUpPad extends Entity {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new RenderRect(0, 0, 12, 12, 0xde5309));
+        this.addComponent(new AnimatedSprite(this.scene.game.getResource("speedUp").textureSliceFromSheet(), {
+            animationSpeed: 100
+        }))
         this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.SPEED_UP, width: 12, height: 12}))
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
@@ -269,7 +271,9 @@ export class SpeedDownPad extends Entity {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new RenderRect(0, 0, 12, 12, 0x00FF00));
+        this.addComponent(new AnimatedSprite(this.scene.game.getResource("speedDown").textureSliceFromSheet(), {
+            animationSpeed: 100
+        }))
         this.addComponent(new RectCollider(MainScene.physics, {layer: Layers.SPEED_DOWN, width: 12, height: 12}))
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
