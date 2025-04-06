@@ -2,7 +2,7 @@ import {Component, Entity, Log, MathUtil, System, TiledMapLoader} from "lagom-en
 import {MovingThing, ThingMover} from "./MovingThing.ts";
 import {LD57} from "./LD57.ts";
 import stuff from "./art/sets/stuff.json";
-import {Coin, SolidTile} from "./levelGen/tiles.ts";
+import {Coin, SolidTile, SpeedDownPad, SpeedUpPad} from "./levelGen/tiles.ts";
 
 class SpawnNext extends Component {
     constructor(readonly height: number) {
@@ -60,6 +60,12 @@ class SetSpawner extends System<[SpawnNext]> {
                     switch (tileId) {
                         case 9:
                             this.scene.addEntity(new Coin(x, y + LD57.GAME_HEIGHT)).addComponent(new MovingThing());
+                            break;
+                        case 10:
+                            this.scene.addEntity(new SpeedUpPad(x, y + LD57.GAME_HEIGHT)).addComponent(new MovingThing());
+                            break;
+                        case 11:
+                            this.scene.addEntity(new SpeedDownPad(x, y + LD57.GAME_HEIGHT)).addComponent(new MovingThing());
                             break;
                         default: {
                             // static walls

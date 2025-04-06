@@ -4,6 +4,7 @@ import {
     Component,
     Entity,
     Key,
+    LagomType,
     MathUtil,
     RenderCircle,
     System,
@@ -16,7 +17,7 @@ class Controllable extends Component {
 }
 
 class PlayerPhys extends Component {
-    constructor(public sideVelocity: number = 0) {
+    constructor(public sideVelocity: number = 0, public lastFrameVel: number = 0) {
         super();
     }
 }
@@ -43,14 +44,26 @@ export class Player extends Entity {
         this.addComponent(new Controllable())
         this.addComponent(new PlayerPhys())
         this.addComponent(new TextDisp(0, 20, "0", {fill: "red"}));
+        this.scene.addSystem(new Booster());
         this.scene.addSystem(new PlayerMover());
     }
 }
 
 export class Boost extends Component {
-    constructor() {
+    constructor(readonly mod: number) {
         super();
     }
+}
+
+class Booster extends System<[Boost]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, component) => {
+            ThingMover.velocity += 0.005 * component.mod;
+            component.destroy();
+        })
+    }
+    types = [Boost];
+
 }
 
 class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]> {
@@ -82,14 +95,15 @@ class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]> {
             if (this.scene.game.keyboard.isKeyDown(Key.Space, Key.KeyW, Key.ArrowUp)) {
                 drag = this.drag;
             }
-            let oldVel = ThingMover.velocity;
+
             ThingMover.velocity -= ThingMover.velocity * drag * delta;
             ThingMover.velocity += this.acceleration * delta;
             ThingMover.velocity = MathUtil.clamp(ThingMover.velocity, this.minSpeed, this.maxSpeed)
 
             // Based on the acceleration this frame, move slightly up or down from the middle.
-            let frameAccel = ThingMover.velocity - oldVel;
+            let frameAccel = ThingMover.velocity - phys.lastFrameVel;
             entity.transform.y += frameAccel * 12 * delta;
+            phys.lastFrameVel = ThingMover.velocity;
 
             txt.pixiObj.text = `${ThingMover.velocity.toFixed(2)}`;
         });

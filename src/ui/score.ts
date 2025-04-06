@@ -1,9 +1,10 @@
 import {Entity, TextDisp} from "lagom-engine";
+import * as PIXI from "pixi.js";
 
 export class ScoreText extends TextDisp {
     private score: number;
 
-    constructor(xOff: number, yOff: number, private readonly prefix: string, options: Partial<ITextStyle>) {
+    constructor(xOff: number, yOff: number, private readonly prefix: string, options: Partial<PIXI.ITextStyle>) {
         super(xOff, yOff, prefix + " 0", options);
         this.prefix = prefix;
         this.score = 0;
@@ -26,8 +27,8 @@ export class ScoreDisplay extends Entity {
         this.addComponent(new TextDisp(0, 0, "", {dropShadowDistance: 10}))
         this.addComponent(new ScoreText(0, 0, "Score: ", {
             fontFamily: "pixeloid",
-            fill: 0xffffff,
-            fontSize: 20,
+            fill: 0xfaf0b9,
+            fontSize: 12,
         }));
     }
 }

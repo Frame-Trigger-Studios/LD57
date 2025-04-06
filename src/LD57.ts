@@ -33,11 +33,11 @@ import {ScoreDisplay, ScoreText} from "./ui/score";
 export enum Layers {
     BACKGROUND,
     FOREGROUND,
-    PLAYER,
-    COIN,
-    BLOCK,
     SPEED_UP,
     SPEED_DOWN,
+    COIN,
+    BLOCK,
+    PLAYER,
     UI
 }
 
@@ -102,12 +102,13 @@ export class MainScene extends Scene {
         // this.addGlobalSystem(new TileGenerator());
 
         this.addGUIEntity(new Diagnostics("red", 4, true));
-        this.addGUIEntity(new ScoreDisplay(30, LD57.GAME_HEIGHT - 30));
+        this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 10, 10));
     }
 }
 
 export class LD57 extends Game {
     static GAME_WIDTH = 288;
+    static VIEW_WIDTH = 384;
     static GAME_HEIGHT = 288;
 
     static muted = false;
@@ -118,7 +119,7 @@ export class LD57 extends Game {
 
     constructor() {
         super({
-            width: LD57.GAME_WIDTH,
+            width: LD57.VIEW_WIDTH,
             height: LD57.GAME_HEIGHT,
             resolution: 2,
             backgroundColor: 0x0B0926
