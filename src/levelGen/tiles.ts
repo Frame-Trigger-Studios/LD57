@@ -3,7 +3,6 @@ import {
     CircleCollider,
     Component,
     Entity,
-    GlobalSystem,
     MathUtil,
     PolyCollider,
     RectCollider,
@@ -15,13 +14,6 @@ import {
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "../LD57.ts";
 import {MovingThing} from "../MovingThing.ts";
-import {
-    generateStructure,
-    getDefaultRow,
-    LeftRightPipeStructure,
-    RightLeftPipeStructure,
-    VoidStructure
-} from "./structures.ts";
 import {ScoreText} from "../ui/score";
 import {Boost, Player} from "../Player";
 import {Texture} from "pixi.js";
@@ -29,9 +21,10 @@ import {Texture} from "pixi.js";
 export const tileWidth = 12;
 export const tileHeight = 12;
 
-// export const NUM_TILE_WIDE = LD57.GAME_WIDTH / tileWidth;
+export class TileBase extends Entity {
+}
 
-export class SolidTile extends Entity {
+export class SolidTile extends TileBase {
 
     constructor(x: number, y: number, readonly tileId: number, readonly dark: boolean = false) {
         super("solidTile", x, y, dark ? Layers.BACKGROUND : Layers.BLOCK);
@@ -209,7 +202,7 @@ export class SolidTile extends Entity {
     }
 }
 
-export class Coin extends Entity {
+export class Coin extends TileBase {
 
     constructor(x: number, y: number) {
         super("coin", x, y, Layers.COIN);
@@ -236,7 +229,7 @@ export class Coin extends Entity {
     }
 }
 
-export class SpeedUpPad extends Entity {
+export class SpeedUpPad extends TileBase {
 
     constructor(x: number, y: number) {
         super("speedUP", x, y, Layers.SPEED_UP);
@@ -256,7 +249,7 @@ export class SpeedUpPad extends Entity {
     }
 }
 
-export class SpeedDownPad extends Entity {
+export class SpeedDownPad extends TileBase {
 
     constructor(x: number, y: number) {
         super("speedDOWN", x, y, Layers.SPEED_DOWN);
@@ -274,80 +267,6 @@ export class SpeedDownPad extends Entity {
             }
         })
     }
-}
-
-export class EmptyTile extends Entity {
-
-    constructor(x: number, y: number) {
-        super("emptyTile", x, y, Layers.FOREGROUND);
-    }
-
-    onAdded() {
-        super.onAdded();
-        this.addComponent(new RenderRect(0, 0, 12, 12, null, 0x000000));
-    }
-}
-
-export class TileRow extends Entity {
-    constructor(x: number, y: number) {
-        super("tileRow", x, y, Layers.FOREGROUND);
-    }
-
-    onAdded() {
-        super.onAdded();
-        this.addComponent(new MovingThing());
-    }
-
-    onRemoved() {
-        super.onRemoved();
-        TileGenerator.layers -= 1;
-    }
-}
-
-export class TileGenerator extends GlobalSystem<[]> {
-    NUM_TILE_WIDE = LD57.GAME_WIDTH / tileWidth;
-    lastRow: Entity | undefined = undefined;
-    static layers = 0;
-
-    update(delta: number): void {
-        while (TileGenerator.layers < 100) {
-            const row_y = this.lastRow !== undefined ? this.lastRow.transform.y : LD57.GAME_HEIGHT + 12;
-            let rows = this.rollForStructure();
-            this.addRows(rows, row_y);
-
-            TileGenerator.layers += 1;
-        }
-    }
-
-    addRows(rows: number[][], y: number) {
-        let spawn_height = y;
-        for (let j = 0; j < rows.length; j++) {
-            this.lastRow = this.scene.addEntity(new TileRow(0, spawn_height + 12));
-            for (let i = 0; i < rows[j].length; i++) {
-                if (rows[j][i] == 1) {
-                    this.lastRow.addChild(new SolidTile(i * tileWidth, 0, 0));
-                } else {
-                    // this.addChild(new EmptyTile(i * tileWidth, 0));
-                }
-            }
-            spawn_height = this.lastRow.transform.y;
-        }
-    }
-
-    rollForStructure(): number[][] {
-        const roll = Math.floor(Math.random() * 10);
-        if (roll > 0 && roll <= 2) {
-            return generateStructure(new LeftRightPipeStructure());
-        } else if (roll > 2 && roll <= 4) {
-            return generateStructure(new RightLeftPipeStructure());
-        } else if (roll > 4 && roll <= 6) {
-            return generateStructure(new VoidStructure());
-        }
-
-        return [getDefaultRow(this.NUM_TILE_WIDE)];
-    }
-
-    types = [];
 }
 
 class ResetMe extends Component {

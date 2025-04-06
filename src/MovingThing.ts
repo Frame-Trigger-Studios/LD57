@@ -1,6 +1,5 @@
-import {Component, Log, System} from "lagom-engine";
+import {Component, System} from "lagom-engine";
 import {LD57} from "./LD57.ts";
-import {Dead} from "./Player";
 
 export class MovingThing extends Component {
 }
@@ -14,6 +13,7 @@ export class ThingMover extends System<[MovingThing]> {
             return;
         }
         this.runOnEntitiesWithSystem((system, entity) => {
+            if (LD57.GAMEOVER) return;
             entity.transform.y -= ThingMover.velocity * delta;
 
             if (entity.transform.y < -LD57.GAME_HEIGHT - 20) {

@@ -1,7 +1,7 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix,
+    CollisionMatrix, DebugCollisionSystem,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
@@ -48,8 +48,9 @@ export enum Layers {
     SPEED_DOWN,
     COIN,
     BLOCK,
+    FLOOR,
     PLAYER,
-    UI
+    UI,
 }
 
 class TitleScene extends Scene {
@@ -83,6 +84,7 @@ export class MainScene extends Scene {
         collisionMatrix.addCollision(Layers.PLAYER, Layers.BLOCK);
         collisionMatrix.addCollision(Layers.PLAYER, Layers.SPEED_UP);
         collisionMatrix.addCollision(Layers.PLAYER, Layers.SPEED_DOWN);
+        collisionMatrix.addCollision(Layers.PLAYER, Layers.FLOOR);
         MainScene.physics = new DiscreteCollisionSystem(collisionMatrix);
     }
 
@@ -132,6 +134,7 @@ export class LD57 extends Game {
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
     static DEBUG = false;
+    static GAMEOVER = false;
 
     constructor() {
         super({
@@ -183,7 +186,7 @@ export class LD57 extends Game {
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new MainScene(this));
+                this.setScene(new TitleScene(this));
             }
         )
 

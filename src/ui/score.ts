@@ -4,7 +4,7 @@ import {ThingMover} from "../MovingThing.ts";
 import {PlayerMover} from "../Player.ts";
 
 export class ScoreText extends TextDisp {
-    private score: number;
+    public score: number;
 
     constructor(xOff: number, yOff: number, private readonly prefix: string, options: Partial<PIXI.ITextStyle>) {
         super(xOff, yOff, prefix + "0", options);
@@ -34,7 +34,7 @@ export class ScoreDisplay extends Entity {
 
         this.addComponent(new Timer(100, score, true)).onTrigger.register((caller, data) => {
             const multiplier = (ThingMover.velocity - PlayerMover.minSpeed) / (PlayerMover.maxSpeed - PlayerMover.minSpeed);
-            data.addScore(1 * (1 + multiplier));
+            data.addScore((1 + multiplier));
         })
     }
 }

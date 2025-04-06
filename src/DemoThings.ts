@@ -17,7 +17,7 @@ class SpawnNextBg extends Component {
     }
 }
 
-class SetSpawner extends System<[SpawnNext]> {
+export class SetSpawner extends System<[SpawnNext]> {
     sets: any[] = [];
 
     constructor() {
@@ -44,6 +44,9 @@ class SetSpawner extends System<[SpawnNext]> {
     }
 
     update(delta: number): void {
+        if (LD57.GAMEOVER) {
+            return;
+        }
         this.runOnEntities((entity, component) => {
             entity.transform.y -= ThingMover.velocity * delta;
 

@@ -16,7 +16,7 @@ import {ThingMover} from "./MovingThing.ts";
 class Controllable extends Component {
 }
 
-class PlayerPhys extends Component {
+export class PlayerPhys extends Component {
     constructor(public sideVelocity: number = 0, public lastFrameVel: number = 0) {
         super();
     }
@@ -55,7 +55,6 @@ export class Player extends Entity {
         this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, yOff: 16}))
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.BLOCK) {
-
                 if (this.getComponent(SpinMe) != null) {
                     return;
                 }
@@ -152,6 +151,17 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
                 drag = this.drag;
             }
 
+
+            if (LD57.GAMEOVER) {
+                spr.setAnimation(1, false);
+
+                entity.transform.y += 0.06 * delta;
+                entity.transform.x = MathUtil.clamp(entity.transform.x, 30, LD57.GAME_WIDTH - 30);
+
+                return;
+            }
+
+
             ThingMover.velocity -= ThingMover.velocity * drag * delta;
 
             // Don't increase speed if we are spinning
@@ -163,6 +173,10 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             // Based on the acceleration this frame, move slightly up or down from the middle.
             let frameAccel = ThingMover.velocity - phys.lastFrameVel;
             entity.transform.y += frameAccel * 12 * delta;
+
+            // If we are drifting too much, move back to the bounds
+            entity.transform.y = MathUtil.clamp(entity.transform.y, 40, 80);
+
             phys.lastFrameVel = ThingMover.velocity;
 
             if (frameAccel < 0 || ThingMover.velocity < 0.042) {
@@ -174,9 +188,5 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
     }
 
     types = [PlayerPhys, Controllable, AnimatedSpriteController];
-
-}
-
-export class Dead extends Component {
 
 }

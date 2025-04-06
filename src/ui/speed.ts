@@ -33,6 +33,7 @@ export class Indicator extends Sprite {
 
 class IndicatorMover extends System<[Indicator, TextDisp]> {
     update(delta: number): void {
+        if (LD57.GAMEOVER) return;
         this.runOnEntities((entity, indicator, txt) => {
             const speedPercentage = (ThingMover.velocity - PlayerMover.minSpeed) / (PlayerMover.maxSpeed - PlayerMover.minSpeed);
             indicator.applyConfig({yOffset: speedPercentage * (144 - 11)})
