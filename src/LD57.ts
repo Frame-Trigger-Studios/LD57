@@ -32,7 +32,7 @@ import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
-import speedDown from "./art/wind_darker.png"
+import speedDown from "./art/wind_darker_2x.png"
 import speedUp from "./art/down.png"
 import barSpr from "./art/speedbar.png"
 import barIndicatorSpr from "./art/bar_indicator.png"
