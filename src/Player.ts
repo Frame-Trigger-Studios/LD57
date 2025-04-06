@@ -120,7 +120,7 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
     sideDrag = 0.008;
     sideMax = 0.2;
 
-    acceleration = 0.00001;
+    acceleration = 0.00002;
     drag = 0.002;
 
     update(delta: number): void {

@@ -33,7 +33,10 @@ export class EndFloor extends Entity {
             })).onTriggerEnter.register(caller => {
                 const player = caller.getScene().getEntityWithName("player");
                 player?.getComponent(PlayerPhys)?.destroy();
-                player?.getComponent<AnimatedSpriteController>(AnimatedSpriteController)?.applyConfig({animationSpeed: 9999999999})
+                player?.getComponent<AnimatedSpriteController>(AnimatedSpriteController)?.applyConfig({
+                    animationSpeed: 9999999999,
+                    rotation: 0
+                })
 
                 // Put the score up
                 const e = this.scene.addGUIEntity(new Entity("endcontro ls", 0, 0, Layers.FOREGROUND));
@@ -64,6 +67,7 @@ export class EndFloor extends Entity {
                 })).pixiObj.anchor.set(0.5);
 
                 this.scene.addSystem(new ActionOnPress(() => {
+                    LD57.GAMEOVER = false;
                     this.scene.game.setScene(new MainScene(this.scene.game))
                 }, [Key.Space]));
             });
