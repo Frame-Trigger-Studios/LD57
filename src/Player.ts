@@ -33,12 +33,13 @@ export class Player extends Entity {
         this.addComponent(new AnimatedSpriteController(0, [
             {
                 id: 0,
-                textures: [this.scene.game.getResource("lady").texture(0, 0, 12, 24)]
+                textures: [this.scene.game.getResource("lady").texture(0, 0, 12, 24)],
+                config: {xAnchor: 0.5}
             }]));
 
-        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, xOff: 6, yOff: 16}));
+        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, yOff: 16}));
         if (LD57.DEBUG) {
-            this.addComponent(new RenderCircle(6, 16, 4));
+            this.addComponent(new RenderCircle(0, 16, 4));
         }
 
         this.addComponent(new Controllable())
@@ -65,7 +66,7 @@ class Booster extends System<[Boost]> {
 
 }
 
-export class PlayerMover extends System<[PlayerPhys, Controllable]> {
+export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSpriteController]> {
     static minSpeed = 0.04;
     static maxSpeed = 0.5;
 
@@ -77,10 +78,12 @@ export class PlayerMover extends System<[PlayerPhys, Controllable]> {
     drag = 0.002;
 
     update(delta: number): void {
-        this.runOnEntities((entity, phys) => {
+        this.runOnEntities((entity, phys, _, spr) => {
             if (entity.getComponent(Dead) !== null) {
                 return;
             }
+
+            spr.applyConfig({rotation: -phys.sideVelocity})
 
             if (this.scene.game.keyboard.isKeyDown(Key.KeyA, Key.ArrowLeft)) {
                 phys.sideVelocity -= this.sideInc;
@@ -110,7 +113,7 @@ export class PlayerMover extends System<[PlayerPhys, Controllable]> {
         });
     }
 
-    types = [PlayerPhys, Controllable];
+    types = [PlayerPhys, Controllable, AnimatedSpriteController];
 
 }
 
