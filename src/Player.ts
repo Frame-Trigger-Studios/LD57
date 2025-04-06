@@ -47,6 +47,12 @@ export class Player extends Entity {
     }
 }
 
+export class Boost extends Component {
+    constructor() {
+        super();
+    }
+}
+
 class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]> {
     minSpeed = 0.04;
     maxSpeed = 0.5;

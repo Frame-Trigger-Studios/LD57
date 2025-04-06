@@ -20,6 +20,7 @@ import {
     VoidStructure
 } from "./structures.ts";
 import {ScoreText} from "../ui/score";
+import {Boost, Player} from "../Player";
 
 export const tileWidth = 12;
 export const tileHeight = 12;
@@ -140,6 +141,28 @@ export class Coin extends Entity {
                 let score: ScoreText[] | undefined = this.getScene().getEntityWithName("scoreboard")?.getComponentsOfType<ScoreText>(ScoreText);
                 score?.pop()?.addScore(10);
 
+            }
+        })
+
+        if (LD57.DEBUG) {
+            this.addComponent(new RenderCircle(6, 6, 10))
+        }
+    }
+}
+
+export class SpeedUpPad extends Entity {
+
+    constructor(x: number, y: number) {
+        super("speedUP", x, y, Layers.SPEED_UP);
+    }
+
+    onAdded() {
+        super.onAdded();
+        this.addComponent(new RenderRect(0, 0, 12,12, 0xde5309));
+        this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.SPEED_UP, xOff: 6, yOff: 6, radius: 10}))
+            .onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.PLAYER) {
+                (<Player>data.other.parent).addComponent(new Boost());
             }
         })
 
