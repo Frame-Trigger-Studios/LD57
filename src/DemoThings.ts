@@ -138,7 +138,7 @@ class BackgroundSpawner extends System<[SpawnNextBg]> {
                     this.scene.addEntity(new SolidTile(x, y + LD57.GAME_HEIGHT, tileId, true)).addComponent(new MovingThing());
                 });
 
-                e.addComponent(new SpawnNextBg(height + MathUtil.randomRange(-48, 48)));
+                e.addComponent(new SpawnNextBg(height + MathUtil.randomRange(-256, 0)));
             }
         });
     }
