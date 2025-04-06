@@ -19,6 +19,7 @@ import {
     RightLeftPipeStructure,
     VoidStructure
 } from "./structures.ts";
+import {ScoreText} from "../ui/score";
 
 export const tileWidth = 12;
 export const tileHeight = 12;
@@ -58,6 +59,14 @@ export class Coin extends Entity {
         super.onAdded();
         this.addComponent(new Sprite(this.scene.game.getResource("coin").textureFromIndex(0)));
         this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.COIN, xOff: 6, yOff: 6, radius: 10}))
+            .onTrigger.register((caller, data) => {
+            if (data.other.layer == Layers.PLAYER) {
+                this.destroy();
+                let score: ScoreText[] | undefined = this.getScene().getEntityWithName("scoreboard")?.getComponentsOfType<ScoreText>(ScoreText);
+                score?.pop()?.addScore(10);
+
+            }
+        })
 
         if (LD57.DEBUG) {
             this.addComponent(new RenderCircle(6, 6, 10))

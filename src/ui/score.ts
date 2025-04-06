@@ -1,14 +1,17 @@
 import {Entity, TextDisp} from "lagom-engine";
 
 export class ScoreText extends TextDisp {
+    private score: number;
 
     constructor(xOff: number, yOff: number, private readonly prefix: string, options: Partial<ITextStyle>) {
         super(xOff, yOff, prefix + " 0", options);
         this.prefix = prefix;
+        this.score = 0;
     }
 
-    updateScore(newScore: number) {
-        this.pixiObj.text = this.prefix + newScore
+    addScore(score: number) {
+        this.score += score;
+        this.pixiObj.text = this.prefix + this.score
     }
 }
 
