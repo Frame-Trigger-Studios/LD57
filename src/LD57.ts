@@ -10,6 +10,7 @@ import {
     Game,
     Log,
     LogLevel,
+    RenderRect,
     Scene,
     SpriteSheet,
     TextDisp,
@@ -29,7 +30,7 @@ import coinSpr from "./art/coin.png"
 import barSpr from "./art/speedbar.png"
 import barIndicatorSpr from "./art/bar_indicator.png"
 import {DemoThings} from "./DemoThings.ts";
-import {ScoreDisplay, ScoreText} from "./ui/score";
+import {ScoreDisplay} from "./ui/score";
 import {SpeedDisplay} from "./ui/speed.ts";
 
 
@@ -107,6 +108,8 @@ export class MainScene extends Scene {
         this.addGUIEntity(new Diagnostics("red", 4, true));
         this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 10, 10));
         this.addGUIEntity(new SpeedDisplay());
+        this.addEntity(new Entity("side_background", LD57.GAME_WIDTH, 0, Layers.BACKGROUND))
+            .addComponent(new RenderRect(0, 0, LD57.VIEW_WIDTH - LD57.GAME_WIDTH, LD57.GAME_HEIGHT, 0x594f7d, 0x594f7d));
     }
 }
 
