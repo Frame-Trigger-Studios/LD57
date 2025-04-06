@@ -83,7 +83,7 @@ export class RightLeftPipeStructure extends LeftRightPipeStructure {
 }
 
 export class VoidStructure implements Structure {
-    done: boolean;
+    done: boolean = false;
 
     voidHeight = 0;
     voidHeightMax = 25;

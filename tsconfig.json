@@ -22,5 +22,8 @@
     "src",
     "node_modules/lagom-engine/dist/Common/PIXIComponents.d.ts",
     "node_modules/lagom-engine/dist/Common/PIXIComponents.d.ts"
+  ],
+  "exclude": [
+    "src/art"
   ]
 }
