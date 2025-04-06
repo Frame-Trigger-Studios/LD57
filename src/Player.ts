@@ -48,8 +48,7 @@ export class Player extends Entity {
 }
 
 class PlayerMover extends System<[PlayerPhys, Controllable, TextDisp]> {
-    // minSpeed = 0.04;
-    minSpeed = 0.0;
+    minSpeed = 0.04;
     maxSpeed = 0.5;
 
     sideInc = 0.03;
