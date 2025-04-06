@@ -46,7 +46,7 @@ class SetSpawner extends System<[SpawnNext]> {
                 component.destroy();
                 let e = this.scene.addEntity(new Entity("set", 0, LD57.GAME_HEIGHT));
                 // e.addComponent(new MovingThing());
-                const set = this.sets[0];//this.sets[MathUtil.randomRange(0, this.sets.length)];
+                const set = this.sets[MathUtil.randomRange(0, this.sets.length)];
 
                 // Add a marker to spawn the next one
                 let height = 0;
