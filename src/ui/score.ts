@@ -7,7 +7,7 @@ export class ScoreText extends TextDisp {
     private score: number;
 
     constructor(xOff: number, yOff: number, private readonly prefix: string, options: Partial<PIXI.ITextStyle>) {
-        super(xOff, yOff, prefix + " 0", options);
+        super(xOff, yOff, prefix + "0", options);
         this.prefix = prefix;
         this.score = 0;
     }
@@ -26,8 +26,7 @@ export class ScoreDisplay extends Entity {
 
     onAdded() {
         super.onAdded();
-        this.addComponent(new TextDisp(0, 0, "", {dropShadowDistance: 10}))
-        const score = this.addComponent(new ScoreText(0, 0, "Score: ", {
+        const score = this.addComponent(new ScoreText(0, 0, "Score\n", {
             fontFamily: "retro",
             fill: 0xfaf0b9,
             fontSize: 12,

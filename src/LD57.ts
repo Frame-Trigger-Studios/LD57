@@ -114,7 +114,7 @@ export class MainScene extends Scene {
         // this.addGlobalSystem(new TileGenerator());
 
         // this.addGUIEntity(new Diagnostics("red", 4, true));
-        this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 10, 10));
+        this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
         this.addGUIEntity(new SpeedDisplay());
         this.addGUIEntity(new ScoreTimer());
         this.addEntity(new Entity("side_background", LD57.GAME_WIDTH, 0, Layers.BACKGROUND))

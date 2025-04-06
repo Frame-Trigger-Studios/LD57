@@ -3,16 +3,16 @@ import {LD57} from "../LD57.ts";
 
 export class ScoreTimer extends Entity {
     constructor() {
-        super("score_timer", LD57.GAME_WIDTH + 10, 220);
+        super("score_timer", LD57.GAME_WIDTH + 5, 210);
     }
 
     onAdded() {
         super.onAdded();
 
-        const txt = this.addComponent(new TextDisp(0, 0, "00:00", {
+        const txt = this.addComponent(new TextDisp(0, 0, "TIME LEFT\n00:00", {
             fontFamily: "retro",
             fill: 0xfaf0b9,
-            fontSize: 16
+            fontSize: 12
         }))
 
         let roundTime = 66;
@@ -22,7 +22,11 @@ export class ScoreTimer extends Entity {
 
             const mins = Math.max(0, Math.floor(roundTime / 60));
             const secs = Math.max(0, roundTime % 60);
-            txt.pixiObj.text = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            txt.pixiObj.text = `TIME LEFT\n${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+            if (roundTime == 30) {
+                txt.pixiObj.style.fill = 0xcc9a6e;
+            }
         })
 
     }
