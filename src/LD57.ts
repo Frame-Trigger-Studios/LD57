@@ -20,6 +20,8 @@ import WebFont from 'webfontloader';
 import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
 import ladySpr from "./art/lady.png";
+import ladyFallSpr from "./art/lady_falling.png";
+import ladyParaSpr from "./art/lady_parasol.png";
 import tileSpr from "./art/tile.png";
 import {SideWalls} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
@@ -138,6 +140,8 @@ export class LD57 extends Game {
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("tile", new SpriteSheet(tileSpr, 12, 12))
         this.addResource("lady", new SpriteSheet(ladySpr, 12, 24))
+        this.addResource("lady_falling", new SpriteSheet(ladyFallSpr, 36, 48))
+        this.addResource("lady_para", new SpriteSheet(ladyParaSpr, 36, 48))
         this.addResource("coin", new SpriteSheet(coinSpr, 12, 12))
         this.addResource("inputPalette", new SpriteSheet(inputPaletteSpr, 4, 1))
         this.addResource("outputPalette", new SpriteSheet(outputPaletteSpr, 4, 1))

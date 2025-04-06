@@ -4,11 +4,9 @@ import {
     Component,
     Entity,
     Key,
-    LagomType,
     MathUtil,
     RenderCircle,
-    System,
-    TextDisp
+    System
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "./LD57.ts";
 import {ThingMover} from "./MovingThing.ts";
@@ -33,9 +31,15 @@ export class Player extends Entity {
         this.addComponent(new AnimatedSpriteController(0, [
             {
                 id: 0,
-                textures: [this.scene.game.getResource("lady").texture(0, 0, 12, 24)],
-                config: {xAnchor: 0.5}
-            }]));
+                textures: this.scene.game.getResource("lady_falling").textureSliceFromRow(0, 0, 3),
+                config: {xAnchor: 0.5, yAnchor: 0.5, animationSpeed: 120}
+            },
+            {
+                id: 1,
+                textures: this.scene.game.getResource("lady_para").textureSliceFromRow(0, 0, 1),
+                config: {xAnchor: 0.5, yAnchor: 0.5, animationSpeed: 300}
+            },
+        ]));
 
         this.addComponent(new CircleCollider(MainScene.physics, {layer: Layers.PLAYER, radius: 4, yOff: 16}));
         if (LD57.DEBUG) {
@@ -62,6 +66,7 @@ class Booster extends System<[Boost]> {
             component.destroy();
         })
     }
+
     types = [Boost];
 
 }
@@ -110,6 +115,12 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             let frameAccel = ThingMover.velocity - phys.lastFrameVel;
             entity.transform.y += frameAccel * 12 * delta;
             phys.lastFrameVel = ThingMover.velocity;
+
+            if (frameAccel > 0) {
+                spr.setAnimation(0, false);
+            } else {
+                spr.setAnimation(1, false);
+            }
         });
     }
 
@@ -117,7 +128,6 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
 
 }
 
-export class Dead extends Component
-{
+export class Dead extends Component {
 
 }
