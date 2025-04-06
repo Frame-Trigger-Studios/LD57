@@ -1,6 +1,10 @@
 import {
     ActionOnPress,
-    AudioAtlas, Diagnostics,
+    AudioAtlas,
+    CollisionMatrix,
+    DebugCollisionSystem,
+    Diagnostics,
+    DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
@@ -9,7 +13,6 @@ import {
     Scene,
     SpriteSheet,
     TextDisp,
-    TiledMapLoader,
     TimerSystem
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
@@ -17,13 +20,12 @@ import muteButtonSpr from "./art/mute_button.png";
 import {SoundManager} from "./util/SoundManager";
 import ladySpr from "./art/lady.png";
 import tileSpr from "./art/tile.png";
-import {SideWalls, TileGenerator} from "./levelGen/tiles.ts";
+import {SideWalls} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
-import {PaletteSwapper} from "./paletteSwapper.ts";
 import {DemoThings} from "./DemoThings.ts";
 import {ScoreDisplay, ScoreText} from "./ui/score";
 
@@ -31,7 +33,11 @@ import {ScoreDisplay, ScoreText} from "./ui/score";
 export enum Layers {
     BACKGROUND,
     FOREGROUND,
-    Player,
+    PLAYER,
+    COIN,
+    BLOCK,
+    SPEED_UP,
+    SPEED_DOWN,
     UI
 }
 
@@ -43,7 +49,10 @@ class TitleScene extends Scene {
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD57", {fontFamily: "retro", fill: 0xffffff}));
+        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD57", {
+            fontFamily: "retro",
+            fill: 0xffffff
+        }));
 
         this.addSystem(new ActionOnPress(() => {
             this.game.setScene(new MainScene(this.game))
@@ -51,17 +60,38 @@ class TitleScene extends Scene {
     }
 }
 
-class MainScene extends Scene
-{
+export class MainScene extends Scene {
+
+    static physics: DiscreteCollisionSystem;
+
+    constructor(game: Game) {
+        super(game);
+
+        const collisionMatrix = new CollisionMatrix();
+        collisionMatrix.addCollision(Layers.PLAYER, Layers.COIN);
+        collisionMatrix.addCollision(Layers.PLAYER, Layers.BLOCK);
+        collisionMatrix.addCollision(Layers.PLAYER, Layers.SPEED_UP);
+        collisionMatrix.addCollision(Layers.PLAYER, Layers.SPEED_DOWN);
+        MainScene.physics = new DiscreteCollisionSystem(collisionMatrix);
+    }
+
     onAdded() {
         super.onAdded();
+
+
+        this.addGlobalSystem(MainScene.physics);
+        this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
+
 
         this.addGUIEntity(new SoundManager());
         // this.addGlobalSystem(new PaletteSwapper());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
 
-        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {fontFamily: "pixeloid", fill: 0xffffff}));
+        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
+        //     fontFamily: "pixeloid",
+        //     fill: 0xffffff
+        // }));
 
         this.addEntity(new Player());
         this.addSystem(new ThingMover());
@@ -76,8 +106,7 @@ class MainScene extends Scene
     }
 }
 
-export class LD57 extends Game
-{
+export class LD57 extends Game {
     static GAME_WIDTH = 288;
     static GAME_HEIGHT = 288;
 
@@ -85,8 +114,9 @@ export class LD57 extends Game
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    constructor()
-    {
+    static DEBUG = true;
+
+    constructor() {
         super({
             width: LD57.GAME_WIDTH,
             height: LD57.GAME_HEIGHT,

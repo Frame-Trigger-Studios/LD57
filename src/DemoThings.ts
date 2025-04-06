@@ -60,6 +60,7 @@ class SetSpawner extends System<[SpawnNext]> {
                     switch (tileId) {
                         case 9:
                             this.scene.addEntity(new Coin(x, y + LD57.GAME_HEIGHT)).addComponent(new MovingThing());
+                            break;
                         default: {
                             // static walls
                             this.scene.addEntity(new SolidTile(x, y + LD57.GAME_HEIGHT, tileId)).addComponent(new MovingThing());
@@ -68,8 +69,6 @@ class SetSpawner extends System<[SpawnNext]> {
                 });
 
                 e.addComponent(new SpawnNext(height + MathUtil.randomRange(0, 2 * 12)));
-                // TODO enable this when it is fixed
-                // entity.destroy();
             }
         });
     }
