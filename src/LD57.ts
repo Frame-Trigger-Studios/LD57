@@ -32,6 +32,8 @@ import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
+import speedDown from "./art/wind_darker.png"
+import speedUp from "./art/down.png"
 import barSpr from "./art/speedbar.png"
 import barIndicatorSpr from "./art/bar_indicator.png"
 import {BackgroundEntity, DemoThings} from "./DemoThings.ts";
@@ -149,6 +151,8 @@ export class LD57 extends Game {
         this.addResource("lady_falling", new SpriteSheet(ladyFallSpr, 36, 48))
         this.addResource("lady_para", new SpriteSheet(ladyParaSpr, 36, 48))
         this.addResource("coin", new SpriteSheet(coinSpr, 12, 12))
+        this.addResource("speedDown", new SpriteSheet(speedDown, 12, 12))
+        this.addResource("speedUp", new SpriteSheet(speedUp, 12, 12))
         this.addResource("inputPalette", new SpriteSheet(inputPaletteSpr, 4, 1))
         this.addResource("outputPalette", new SpriteSheet(outputPaletteSpr, 4, 1))
         this.addResource("bar", new SpriteSheet(barSpr, 16, 144))
