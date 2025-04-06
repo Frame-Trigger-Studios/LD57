@@ -18,5 +18,9 @@
     /* Linting */
     "strict": true
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "node_modules/lagom-engine/dist/Common/PIXIComponents.d.ts",
+    "node_modules/lagom-engine/dist/Common/PIXIComponents.d.ts"
+  ]
 }
