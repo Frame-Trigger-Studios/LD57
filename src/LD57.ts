@@ -24,6 +24,7 @@ import ladyFallSpr from "./art/lady_falling.png";
 import ladyParaSpr from "./art/lady_parasol.png";
 import tileSpr from "./art/tile.png";
 import squareTileSpr from "./art/square_tiles.png";
+import bgSquareTileSpr from "./art/bg_square_tiles.png";
 import bgTileSpr from "./art/bg_tile.png";
 import {SideWalls} from "./levelGen/tiles.ts";
 import {Player} from "./Player.ts";
@@ -33,7 +34,7 @@ import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
 import barSpr from "./art/speedbar.png"
 import barIndicatorSpr from "./art/bar_indicator.png"
-import {DemoThings} from "./DemoThings.ts";
+import {BackgroundEntity, DemoThings} from "./DemoThings.ts";
 import {ScoreDisplay} from "./ui/score";
 import {SpeedDisplay} from "./ui/speed.ts";
 
@@ -104,8 +105,8 @@ export class MainScene extends Scene {
         this.addEntity(new Player());
         this.addSystem(new ThingMover());
 
-        // TODO remove me
         this.addEntity(new DemoThings());
+        this.addEntity(new BackgroundEntity());
         this.addEntity(new SideWalls());
         // this.addGlobalSystem(new TileGenerator());
 
@@ -126,7 +127,7 @@ export class LD57 extends Game {
     static musicPlaying = false;
     static audioAtlas: AudioAtlas = new AudioAtlas();
 
-    static DEBUG = true;
+    static DEBUG = false;
 
     constructor() {
         super({
@@ -142,6 +143,7 @@ export class LD57 extends Game {
         this.addResource("mute_button", new SpriteSheet(muteButtonSpr, 16, 16));
         this.addResource("tile", new SpriteSheet(tileSpr, 12, 12))
         this.addResource("sq_tile", new SpriteSheet(squareTileSpr, 12, 12))
+        this.addResource("bg_sq_tile", new SpriteSheet(bgSquareTileSpr, 12, 12))
         this.addResource("bg_tile", new SpriteSheet(bgTileSpr, 12, 12))
         this.addResource("lady", new SpriteSheet(ladySpr, 12, 24))
         this.addResource("lady_falling", new SpriteSheet(ladyFallSpr, 36, 48))

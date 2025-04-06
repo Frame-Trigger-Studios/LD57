@@ -2,13 +2,19 @@ import {Component, Entity, Log, MathUtil, System, TiledMapLoader} from "lagom-en
 import {MovingThing, ThingMover} from "./MovingThing.ts";
 import {LD57} from "./LD57.ts";
 import stuff from "./art/sets/stuff.json";
+import backgrounds from "./art/sets/backgrounds.json";
 import {Coin, SolidTile, SpeedDownPad, SpeedUpPad} from "./levelGen/tiles.ts";
 
 class SpawnNext extends Component {
     constructor(readonly height: number) {
         super();
     }
+}
 
+class SpawnNextBg extends Component {
+    constructor(readonly height: number) {
+        super();
+    }
 }
 
 class SetSpawner extends System<[SpawnNext]> {
@@ -82,6 +88,65 @@ class SetSpawner extends System<[SpawnNext]> {
     types = [SpawnNext];
 }
 
+class BackgroundSpawner extends System<[SpawnNextBg]> {
+    sets: any[] = [];
+
+    constructor() {
+        super();
+
+        // 47, 48
+        const loader: TiledMapLoader = new TiledMapLoader(backgrounds);
+
+        let currentSet: number[][] = [];
+        let yoffset = 0;
+
+        loader.loadFn("Tile Layer 1", (tileId, x, y) => {
+            if (tileId == 48) {
+                this.sets.push(currentSet);
+                currentSet = [];
+                yoffset = y;
+                return;
+            }
+            if (tileId !== 0) {
+                // tiles are 1 indexed in the save so 0 can be nothing
+                currentSet.push([tileId - 1, x, y - yoffset]);
+            }
+        })
+    }
+
+    update(delta: number): void {
+        this.runOnEntities((entity, component) => {
+            entity.transform.y -= ThingMover.velocity * delta;
+
+            if (entity.transform.y <= -component.height) {
+                Log.warn("Spawning");
+                component.destroy();
+                let e = this.scene.addEntity(new Entity("background_set", 0, LD57.GAME_HEIGHT));
+
+                const set = this.sets[MathUtil.randomRange(0, this.sets.length)];
+
+                // Add a marker to spawn the next one
+                let height = 0;
+
+                let xOffset = MathUtil.randomRange(0, 12 * 12);
+
+                // @ts-ignore
+                set.forEach(([tileId, lx, y]) => {
+                    const x = lx + 24 + xOffset;
+                    height = Math.max(height, y);
+                    // Each tileid represents a spawnable thing/sprite variant.
+                    this.scene.addEntity(new SolidTile(x, y + LD57.GAME_HEIGHT, tileId, true)).addComponent(new MovingThing());
+                });
+
+                e.addComponent(new SpawnNextBg(height + MathUtil.randomRange(-48, 48)));
+            }
+        });
+    }
+
+    types = [SpawnNextBg];
+}
+
+
 export class DemoThings extends Entity {
 
     constructor() {
@@ -95,5 +160,21 @@ export class DemoThings extends Entity {
 
         this.scene.addSystem(new SetSpawner());
         this.addComponent(new SpawnNext(0));
+    }
+}
+
+export class BackgroundEntity extends Entity {
+
+    constructor() {
+        super("bg_controller", 0, 0);
+
+
+    }
+
+    onAdded() {
+        super.onAdded();
+
+        this.scene.addSystem(new BackgroundSpawner());
+        this.addComponent(new SpawnNextBg(0));
     }
 }

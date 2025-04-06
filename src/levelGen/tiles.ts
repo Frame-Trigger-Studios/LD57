@@ -32,8 +32,8 @@ export const tileHeight = 12;
 
 export class SolidTile extends Entity {
 
-    constructor(x: number, y: number, readonly tileId: number) {
-        super("solidTile", x, y, Layers.BLOCK);
+    constructor(x: number, y: number, readonly tileId: number, readonly dark: boolean = false) {
+        super("solidTile", x, y, dark ? Layers.BACKGROUND : Layers.BLOCK);
     }
 
     onAdded() {
@@ -42,15 +42,28 @@ export class SolidTile extends Entity {
         const textureX = this.tileId % 12;
         const textureY = Math.floor(this.tileId / 12);
 
-        let sprite = null;
-        if (this.tileId == 0) {
-            sprite = this.scene.game.getResource("sq_tile").texture(MathUtil.randomRange(0, 48), 0);
+        let sprite: null | Texture;
+
+        if (this.dark) {
+            if (this.tileId == 0) {
+                sprite = this.scene.game.getResource("bg_sq_tile").texture(MathUtil.randomRange(0, 48), 0);
+            } else {
+                sprite = this.scene.game.getResource("bg_tile").texture(textureX, textureY);
+            }
         } else {
-            sprite = this.scene.game.getResource("tile").texture(textureX, textureY);
+            if (this.tileId == 0) {
+                sprite = this.scene.game.getResource("sq_tile").texture(MathUtil.randomRange(0, 48), 0);
+            } else {
+                sprite = this.scene.game.getResource("tile").texture(textureX, textureY);
+            }
         }
 
 
         this.addComponent(new Sprite(sprite));
+
+        if (this.dark) {
+            return;
+        }
 
         let collider: PolyCollider | undefined = undefined;
 
