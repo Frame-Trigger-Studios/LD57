@@ -135,7 +135,8 @@ function startGame(scene: Scene) {
     scene.addGUIEntity(new SpeedDisplay());
     scene.addGUIEntity(new ScoreTimer());
 
-    MainScene.sound.startMusic();
+    MainScene.sound.stopAllSounds(true);
+    MainScene.sound.playSound("music", true);
 
     scene.addGlobalSystem(new Restarter());
 }
