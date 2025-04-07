@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "deploy": "tsc && vite build && butler push dist quackqack/ld57:html5"
+    "deploy": "tsc && vite build && butler push dist quackqack/diva-descent:html5"
   },
   "dependencies": {
     "lagom-engine": "^1.2.1",

@@ -252,18 +252,18 @@ export class LD57 extends Game {
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
 
-        LD57.audioAtlas.load("beep", beepSfx);
-        LD57.audioAtlas.load("coin", coinSfx);
-        LD57.audioAtlas.load("gameover", gameoverSfx);
-        LD57.audioAtlas.load("land", landSfx);
-        LD57.audioAtlas.load("slow", slowSfx).volume(0.5);
-        LD57.audioAtlas.load("speedup", speedupSfx);
-        LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.5);
+        LD57.audioAtlas.load("beep", beepSfx).volume(0.3);
+        LD57.audioAtlas.load("coin", coinSfx).volume(0.3);
+        LD57.audioAtlas.load("gameover", gameoverSfx).volume(0.3);
+        LD57.audioAtlas.load("land", landSfx).volume(0.3);
+        LD57.audioAtlas.load("slow", slowSfx).volume(0.1);
+        LD57.audioAtlas.load("speedup", speedupSfx).volume(0.3);
+        LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.1);
 
         // Import sounds and set their properties
         const music = LD57.audioAtlas.load("music", gameMusic)
             .loop(false)
-            .volume(1);
+            .volume(0.8);
 
         // Import fonts. See index.html for examples of how to add new ones.
         const fonts = new Promise<void>((resolve, _) => {
