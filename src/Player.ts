@@ -116,6 +116,7 @@ class Spinner extends System<[SpinMe, AnimatedSpriteController]> {
 export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSpriteController]> {
     static minSpeed = 0.04;
     static maxSpeed = 0.5;
+    static DO_ACCEL = false;
 
     sideInc = 0.03;
     sideDrag = 0.008;
@@ -154,11 +155,12 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
 
 
             if (LD57.GAMEOVER) {
-                spr.setAnimation(1, false);
-
                 entity.transform.y += 0.06 * delta;
-                entity.transform.x = MathUtil.clamp(entity.transform.x, 30, LD57.GAME_WIDTH - 30);
+            }
 
+            if (!PlayerMover.DO_ACCEL || LD57.GAMEOVER) {
+                spr.setAnimation(1, false);
+                entity.transform.x = MathUtil.clamp(entity.transform.x, 30, LD57.GAME_WIDTH - 30);
                 return;
             }
 

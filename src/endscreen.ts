@@ -70,7 +70,7 @@ export class EndFloor extends Entity {
 
                 this.scene.addSystem(new ActionOnPress(() => {
                     LD57.GAMEOVER = false;
-                    this.scene.game.setScene(new MainScene(this.scene.game))
+                    this.scene.game.setScene(new MainScene(this.scene.game, false))
                 }, [Key.Space]));
             });
         }
