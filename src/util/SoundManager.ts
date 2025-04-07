@@ -28,7 +28,7 @@ class MuteListener extends System<[AnimatedSpriteController, MuteComp]> {
 export class SoundManager extends Entity {
     constructor() {
         super("audio", LD57.VIEW_WIDTH - 16 - 8, LD57.GAME_HEIGHT - 24, 0);
-        this.startMusic();
+        // this.startMusic();
     }
 
     onAdded(): void {

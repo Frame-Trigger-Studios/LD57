@@ -18,7 +18,7 @@ export class ScoreTimer extends Entity {
             fontSize: 12
         }))
 
-        let roundTime = 60;
+        let roundTime = 91;
 
         this.addComponent(new Timer(1000, txt, true)).onTrigger.register((caller, txt) => {
             roundTime -= 1;

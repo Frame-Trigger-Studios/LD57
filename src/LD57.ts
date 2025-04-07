@@ -135,6 +135,8 @@ function startGame(scene: Scene) {
     scene.addGUIEntity(new SpeedDisplay());
     scene.addGUIEntity(new ScoreTimer());
 
+    MainScene.sound.startMusic();
+
     scene.addGlobalSystem(new Restarter());
 }
 
@@ -260,7 +262,7 @@ export class LD57 extends Game {
 
         // Import sounds and set their properties
         const music = LD57.audioAtlas.load("music", gameMusic)
-            .loop(true)
+            .loop(false)
             .volume(1);
 
         // Import fonts. See index.html for examples of how to add new ones.
