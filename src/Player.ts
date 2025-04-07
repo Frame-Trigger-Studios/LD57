@@ -102,6 +102,7 @@ export class Player extends Entity {
         this.scene.addSystem(new Booster());
         this.scene.addSystem(new Spinner());
         this.scene.addSystem(new PlayerMover());
+        PlayerMover.MAKE_SOUND = false;
     }
 }
 
@@ -141,6 +142,7 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
     static minSpeed = 0.04;
     static maxSpeed = 0.5;
     static DO_ACCEL = false;
+    static MAKE_SOUND = false;
 
     sideInc = 0.03;
     sideDrag = 0.008;
@@ -207,7 +209,7 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             phys.lastFrameVel = ThingMover.velocity;
 
             if (frameAccel < 0 || ThingMover.velocity < 0.042) {
-                if (spr.currentState == 0) {
+                if (spr.currentState == 0 && PlayerMover.MAKE_SOUND) {
                     MainScene.sound.playSound("slow", false);
                 }
                 spr.setAnimation(1, false);
