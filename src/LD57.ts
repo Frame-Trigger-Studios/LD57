@@ -132,7 +132,9 @@ function startGame(scene: Scene) {
     scene.addEntity(new DemoThings());
     scene.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
     scene.addGUIEntity(new SpeedDisplay());
-    scene.addGUIEntity(new ScoreTimer());
+    scene.addGUIEntity(new ScoreTimer()).addComponent(new Timer(100, null)).onTrigger.register(caller => {
+        PlayerMover.MAKE_SOUND = true;
+    });
 }
 
 export class MainScene extends Scene {
@@ -230,7 +232,7 @@ export class LD57 extends Game {
         LD57.audioAtlas.load("coin", coinSfx);
         LD57.audioAtlas.load("gameover", gameoverSfx);
         LD57.audioAtlas.load("land", landSfx);
-        LD57.audioAtlas.load("slow", slowSfx);
+        LD57.audioAtlas.load("slow", slowSfx).volume(0.5);
         LD57.audioAtlas.load("speedup", speedupSfx);
         LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.5);
 
