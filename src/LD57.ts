@@ -34,6 +34,8 @@ import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
 import coinSpr from "./art/coin.png"
+import coinGetSpr from "./art/coin_get.png"
+import hitBlockSpr from "./art/hit_block.png"
 import speedDown from "./art/wind_darker_2x.png"
 import speedUp from "./art/down.png"
 import barSpr from "./art/speedbar.png"
@@ -116,7 +118,7 @@ class StartMenu extends Entity {
             fontSize: 16,
         })).pixiObj.anchor.set(0.5, 0);
 
-        this.addComponent(new TextDisp(30, LD57.GAME_HEIGHT - 30, "LD58 Entry by Quackqack,\nMasterage + Earlybard", {
+        this.addComponent(new TextDisp(30, LD57.GAME_HEIGHT - 30, "LD57 Entry by Quackqack,\nMasterage + Earlybard", {
             fontFamily: "retro",
             fill: 0xfaf0b9,
             fontSize: 12,
@@ -210,6 +212,8 @@ export class LD57 extends Game {
         this.addResource("lady_falling", new SpriteSheet(ladyFallSpr, 36, 48))
         this.addResource("lady_para", new SpriteSheet(ladyParaSpr, 36, 48))
         this.addResource("coin", new SpriteSheet(coinSpr, 12, 12))
+        this.addResource("coin_get", new SpriteSheet(coinGetSpr, 36, 36))
+        this.addResource("hit_block", new SpriteSheet(hitBlockSpr, 36, 36))
         this.addResource("speedDown", new SpriteSheet(speedDown, 12, 12))
         this.addResource("speedUp", new SpriteSheet(speedUp, 12, 12))
         this.addResource("inputPalette", new SpriteSheet(inputPaletteSpr, 4, 1))

@@ -1,4 +1,5 @@
 import {
+    AnimatedSprite,
     AnimatedSpriteController,
     CircleCollider,
     Component,
@@ -11,7 +12,7 @@ import {
     Timer
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "./LD57.ts";
-import {ThingMover} from "./MovingThing.ts";
+import {MovingThing, ThingMover} from "./MovingThing.ts";
 
 class Controllable extends Component {
 }
@@ -62,6 +63,29 @@ export class Player extends Entity {
                 MainScene.sound.playSound("wallhit", false);
                 caller.parent.addComponent(new ScreenShake(0.5, 2000))
                 ThingMover.velocity = 0;
+
+                const rotation = MathUtil.randomRange(0, MathUtil.degToRad(360));
+                const cGet = this.scene.addEntity(new Entity("wallhit", this.transform.x, this.transform.y, Layers.COIN));
+                cGet.addComponent(new MovingThing());
+                cGet.addComponent(new AnimatedSprite(this.scene.game.getResource("coin_get").textureSliceFromRow(0, 0, 2), {
+                    animationSpeed: 60,
+                    yAnchor: 0.5,
+                    xAnchor: 0.5,
+                    rotation: rotation,
+                    animationEndEvent: () => {
+                        cGet.destroy();
+                    }
+                }));
+                cGet.addComponent(new AnimatedSprite(this.scene.game.getResource("hit_block").textureSliceFromRow(0, 0, 2), {
+                    animationSpeed: 40,
+                    yAnchor: 0.5,
+                    xAnchor: 0.5,
+                    xScale: 1.4,
+                    yScale: 1.4,
+                    rotation: rotation + MathUtil.degToRad(23),
+                    animationEndEvent: () => {
+                    }
+                }));
 
                 // Disable collisions and spin for 2 seconds.
                 const spinner = this.addComponent(new SpinMe(phys.sideVelocity))

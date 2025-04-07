@@ -13,9 +13,9 @@ import {
     System
 } from "lagom-engine";
 import {Layers, LD57, MainScene} from "../LD57.ts";
-import {MovingThing} from "../MovingThing.ts";
+import {MovingThing, ThingMover} from "../MovingThing.ts";
 import {ScoreText} from "../ui/score";
-import {Boost, Player} from "../Player";
+import {Boost, Player, PlayerMover} from "../Player";
 import {Texture} from "pixi.js";
 
 export const tileWidth = 12;
@@ -217,8 +217,22 @@ export class Coin extends TileBase {
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
                 this.destroy();
+
+                const cGet = this.scene.addEntity(new Entity("coinget", this.transform.x, this.transform.y, Layers.COIN));
+                cGet.addComponent(new MovingThing());
+                cGet.addComponent(new AnimatedSprite(this.scene.game.getResource("coin_get").textureSliceFromRow(0, 0, 2), {
+                    animationSpeed: 30,
+                    yOffset: -12,
+                    xOffset: -12,
+                    animationEndEvent: () => {
+                        cGet.destroy();
+                    }
+                }));
+
+
                 let score: ScoreText[] | undefined = this.getScene().getEntityWithName("scoreboard")?.getComponentsOfType<ScoreText>(ScoreText);
-                score?.pop()?.addScore(100);
+                const speedPercentage = (ThingMover.velocity - PlayerMover.minSpeed) / (PlayerMover.maxSpeed - PlayerMover.minSpeed);
+                score?.pop()?.addScore(100 * (1 + speedPercentage));
                 MainScene.sound.playSound("coin", true);
             }
         })
