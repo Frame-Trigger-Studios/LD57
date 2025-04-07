@@ -133,9 +133,7 @@ function startGame(scene: Scene) {
     scene.addEntity(new DemoThings());
     scene.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
     scene.addGUIEntity(new SpeedDisplay());
-    scene.addGUIEntity(new ScoreTimer()).addComponent(new Timer(100, null)).onTrigger.register(caller => {
-        PlayerMover.MAKE_SOUND = true;
-    });
+    scene.addGUIEntity(new ScoreTimer());
 
     scene.addGlobalSystem(new Restarter());
 }

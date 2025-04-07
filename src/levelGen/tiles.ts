@@ -279,6 +279,7 @@ export class SpeedDownPad extends TileBase {
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
                 (<Player>data.other.parent).addComponent(new Boost(-1.1));
+                MainScene.sound.playSound("slow", false);
             }
         })
     }
