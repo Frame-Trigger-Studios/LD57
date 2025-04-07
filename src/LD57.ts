@@ -6,6 +6,7 @@ import {
     Entity,
     FrameTriggerSystem,
     Game,
+    GlobalSystem,
     Key,
     Log,
     LogLevel,
@@ -133,6 +134,29 @@ function startGame(scene: Scene) {
     scene.addGUIEntity(new ScoreTimer()).addComponent(new Timer(100, null)).onTrigger.register(caller => {
         PlayerMover.MAKE_SOUND = true;
     });
+
+    scene.addGlobalSystem(new Restarter());
+}
+
+class Restarter extends GlobalSystem<[]> {
+
+    pressedFrame = 1000;
+
+    update(delta: number): void {
+        if (this.scene.game.keyboard.isKeyDown(Key.KeyR)) {
+            this.pressedFrame -= delta;
+        }
+        if (this.scene.game.keyboard.isKeyReleased(Key.KeyR)) {
+            this.pressedFrame = 1000;
+        }
+
+        if (this.pressedFrame < 0) {
+            this.scene.game.setScene(new MainScene(this.scene.game, false));
+        }
+    }
+
+    types = [];
+
 }
 
 export class MainScene extends Scene {
