@@ -219,7 +219,7 @@ export class Coin extends TileBase {
                 this.destroy();
                 let score: ScoreText[] | undefined = this.getScene().getEntityWithName("scoreboard")?.getComponentsOfType<ScoreText>(ScoreText);
                 score?.pop()?.addScore(100);
-
+                MainScene.sound.playSound("coin", true);
             }
         })
 
@@ -244,6 +244,7 @@ export class SpeedUpPad extends TileBase {
             .onTrigger.register((caller, data) => {
             if (data.other.layer == Layers.PLAYER) {
                 (<Player>data.other.parent).addComponent(new Boost(1));
+                MainScene.sound.playSound("speedup", false);
             }
         })
     }

@@ -1,18 +1,21 @@
 import {
-    ActionOnPress,
     AudioAtlas,
-    CollisionMatrix, DebugCollisionSystem,
+    CollisionMatrix,
+    Component,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
     Game,
+    Key,
     Log,
     LogLevel,
     RenderRect,
     Scene,
     ScreenShaker,
     SpriteSheet,
+    System,
     TextDisp,
+    Timer,
     TimerSystem
 } from 'lagom-engine';
 import WebFont from 'webfontloader';
@@ -26,7 +29,7 @@ import squareTileSpr from "./art/square_tiles.png";
 import bgSquareTileSpr from "./art/bg_square_tiles.png";
 import bgTileSpr from "./art/bg_tile.png";
 import {SideWalls} from "./levelGen/tiles.ts";
-import {Player} from "./Player.ts";
+import {Player, PlayerMover} from "./Player.ts";
 import {ThingMover} from "./MovingThing.ts";
 import inputPaletteSpr from "./art/palettes/night-light-2-bit-1x.png"
 import outputPaletteSpr from "./art/palettes/cmyk-douce-1x.png"
@@ -39,6 +42,14 @@ import {BackgroundEntity, DemoThings} from "./DemoThings.ts";
 import {ScoreDisplay} from "./ui/score";
 import {SpeedDisplay} from "./ui/speed.ts";
 import {ScoreTimer} from "./ui/timer.ts";
+
+import beepSfx from "./sfx/beep.wav";
+import coinSfx from "./sfx/coin.wav";
+import gameoverSfx from "./sfx/gameover.wav";
+import landSfx from "./sfx/land.wav";
+import slowSfx from "./sfx/slow.wav";
+import speedupSfx from "./sfx/speedup.wav";
+import wallhitSfx from "./sfx/wallhit.wav";
 
 
 export enum Layers {
@@ -53,30 +64,79 @@ export enum Layers {
     UI,
 }
 
-class TitleScene extends Scene {
+class SpaceToStart extends Component {
+    constructor(readonly startFn: () => void) {
+        super()
+    }
+}
+
+class SpaceToStartSystem extends System<[SpaceToStart]> {
+    update(delta: number): void {
+        this.runOnEntities((entity, component) => {
+            if (this.getScene().game.keyboard.isKeyPressed(Key.Space)) {
+                PlayerMover.DO_ACCEL = true;
+                component.startFn();
+                entity.destroy();
+            }
+        })
+    }
+
+    types = [SpaceToStart];
+
+}
+
+class StartMenu extends Entity {
+
+    constructor() {
+        super("startmenu", 0, 0, Layers.FOREGROUND);
+    }
+
     onAdded() {
         super.onAdded();
 
-        this.addGUIEntity(new SoundManager());
-        this.addGlobalSystem(new TimerSystem());
-        this.addGlobalSystem(new FrameTriggerSystem());
+        PlayerMover.DO_ACCEL = false;
 
-        this.addGUIEntity(new Entity("title")).addComponent(new TextDisp(100, 10, "LD57", {
+        this.addComponent(new Timer(1000, null, false)).onTrigger.register(caller => {
+            caller.getScene().addSystem(new SpaceToStartSystem());
+        })
+        this.addComponent(new SpaceToStart(() => {
+            startGame(this.scene);
+        }));
+
+        this.addComponent(new TextDisp(LD57.GAME_WIDTH / 2, 100, "Diva Descent", {
             fontFamily: "retro",
-            fill: 0xffffff
-        }));
+            fill: 0xfaf0b9,
+            fontSize: 20,
+        })).pixiObj.anchor.set(0.5, 0);
 
-        this.addSystem(new ActionOnPress(() => {
-            this.game.setScene(new MainScene(this.game))
-        }));
+        this.addComponent(new TextDisp(LD57.GAME_WIDTH / 2, 140, "Press <SPACE>\nto start", {
+            fontFamily: "retro",
+            fill: 0xfaf0b9,
+            align: "center",
+            fontSize: 16,
+        })).pixiObj.anchor.set(0.5, 0);
+
+        this.addComponent(new TextDisp(30, LD57.GAME_HEIGHT - 30, "LD58 Entry by Quackqack,\nMasterage + Earlybard", {
+            fontFamily: "retro",
+            fill: 0xfaf0b9,
+            fontSize: 12,
+        }))
     }
+}
+
+function startGame(scene: Scene) {
+    scene.addEntity(new DemoThings());
+    scene.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
+    scene.addGUIEntity(new SpeedDisplay());
+    scene.addGUIEntity(new ScoreTimer());
 }
 
 export class MainScene extends Scene {
 
     static physics: DiscreteCollisionSystem;
+    static sound: SoundManager;
 
-    constructor(game: Game) {
+    constructor(game: Game, readonly firstLoad = true) {
         super(game);
 
         const collisionMatrix = new CollisionMatrix();
@@ -97,30 +157,24 @@ export class MainScene extends Scene {
         this.addGlobalSystem(MainScene.physics);
         // this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
 
+        if (this.firstLoad) {
+            this.addGUIEntity(new StartMenu());
+        } else {
+            startGame(this);
+        }
 
-        this.addGUIEntity(new SoundManager());
+        MainScene.sound = this.addGUIEntity(new SoundManager());
+
         // this.addGlobalSystem(new PaletteSwapper());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
         this.addGlobalSystem(new ScreenShaker(LD57.GAME_WIDTH / 2, LD57.GAME_HEIGHT / 2));
 
-        // this.addGUIEntity(new Entity("main scene")).addComponent(new TextDisp(100, 10, "MAIN SCENE", {
-        //     fontFamily: "pixeloid",
-        //     fill: 0xffffff
-        // }));
-
         this.addEntity(new Player());
         this.addSystem(new ThingMover());
 
-        this.addEntity(new DemoThings());
         this.addEntity(new BackgroundEntity());
         this.addEntity(new SideWalls());
-        // this.addGlobalSystem(new TileGenerator());
-
-        // this.addGUIEntity(new Diagnostics("red", 4, true));
-        this.addGUIEntity(new ScoreDisplay(LD57.GAME_WIDTH + 5, 10));
-        this.addGUIEntity(new SpeedDisplay());
-        this.addGUIEntity(new ScoreTimer());
     }
 }
 
@@ -166,6 +220,14 @@ export class LD57 extends Game {
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
 
+        LD57.audioAtlas.load("beep", beepSfx);
+        LD57.audioAtlas.load("coin", coinSfx);
+        LD57.audioAtlas.load("gameover", gameoverSfx);
+        LD57.audioAtlas.load("land", landSfx);
+        LD57.audioAtlas.load("slow", slowSfx);
+        LD57.audioAtlas.load("speedup", speedupSfx);
+        LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.5);
+
         // Import sounds and set their properties
         // const music = LD57.audioAtlas.load("music", "ADD_ME")
         //     .loop(true)
@@ -186,7 +248,7 @@ export class LD57 extends Game {
         // Wait for all resources to be loaded and then start the main scene.
         Promise.all([fonts, this.resourceLoader.loadAll()]).then(
             () => {
-                this.setScene(new TitleScene(this));
+                this.setScene(new MainScene(this));
             }
         )
 
