@@ -1,7 +1,7 @@
 import {
     ActionOnPress,
     AudioAtlas,
-    CollisionMatrix, DebugCollisionSystem,
+    CollisionMatrix,
     DiscreteCollisionSystem,
     Entity,
     FrameTriggerSystem,
@@ -40,6 +40,14 @@ import {ScoreDisplay} from "./ui/score";
 import {SpeedDisplay} from "./ui/speed.ts";
 import {ScoreTimer} from "./ui/timer.ts";
 
+import beepSfx from "./sfx/beep.wav";
+import coinSfx from "./sfx/coin.wav";
+import gameoverSfx from "./sfx/gameover.wav";
+import landSfx from "./sfx/land.wav";
+import slowSfx from "./sfx/slow.wav";
+import speedupSfx from "./sfx/speedup.wav";
+import wallhitSfx from "./sfx/wallhit.wav";
+
 
 export enum Layers {
     BACKGROUND,
@@ -75,7 +83,7 @@ class TitleScene extends Scene {
 export class MainScene extends Scene {
 
     static physics: DiscreteCollisionSystem;
-
+    static sound: SoundManager;
     constructor(game: Game) {
         super(game);
 
@@ -98,7 +106,8 @@ export class MainScene extends Scene {
         // this.addGlobalSystem(new DebugCollisionSystem(MainScene.physics));
 
 
-        this.addGUIEntity(new SoundManager());
+        MainScene.sound = this.addGUIEntity(new SoundManager());
+
         // this.addGlobalSystem(new PaletteSwapper());
         this.addGlobalSystem(new TimerSystem());
         this.addGlobalSystem(new FrameTriggerSystem());
@@ -165,6 +174,14 @@ export class LD57 extends Game {
 
         // Load an empty scene while we async load the resources for the main one
         this.setScene(new Scene(this));
+
+        LD57.audioAtlas.load("beep", beepSfx);
+        LD57.audioAtlas.load("coin", coinSfx);
+        LD57.audioAtlas.load("gameover", gameoverSfx);
+        LD57.audioAtlas.load("land", landSfx);
+        LD57.audioAtlas.load("slow", slowSfx);
+        LD57.audioAtlas.load("speedup", speedupSfx);
+        LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.5);
 
         // Import sounds and set their properties
         // const music = LD57.audioAtlas.load("music", "ADD_ME")

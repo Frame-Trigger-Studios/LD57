@@ -38,6 +38,8 @@ export class EndFloor extends Entity {
                     rotation: 0
                 })
 
+                MainScene.sound.playSound("land");
+
                 // Put the score up
                 const e = this.scene.addGUIEntity(new Entity("endcontro ls", 0, 0, Layers.FOREGROUND));
                 e.addComponent(new TextDisp(LD57.GAME_WIDTH / 2, 40, "FINAL SCORE", {

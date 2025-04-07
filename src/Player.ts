@@ -59,6 +59,7 @@ export class Player extends Entity {
                     return;
                 }
 
+                MainScene.sound.playSound("wallhit", false);
                 caller.parent.addComponent(new ScreenShake(0.5, 2000))
                 ThingMover.velocity = 0;
 
@@ -180,6 +181,9 @@ export class PlayerMover extends System<[PlayerPhys, Controllable, AnimatedSprit
             phys.lastFrameVel = ThingMover.velocity;
 
             if (frameAccel < 0 || ThingMover.velocity < 0.042) {
+                if (spr.currentState == 0) {
+                    MainScene.sound.playSound("slow", false);
+                }
                 spr.setAnimation(1, false);
             } else {
                 spr.setAnimation(0, false);

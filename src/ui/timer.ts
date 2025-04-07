@@ -1,5 +1,5 @@
 import {Entity, TextDisp, Timer} from "lagom-engine";
-import {LD57} from "../LD57.ts";
+import {LD57, MainScene} from "../LD57.ts";
 import {EndFloor} from "../endscreen.ts";
 import {SolidTile, TileBase} from "../levelGen/tiles.ts";
 import {ThingMover} from "../MovingThing.ts";
@@ -28,10 +28,18 @@ export class ScoreTimer extends Entity {
             txt.pixiObj.text = `TIME LEFT\n${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 
             if (roundTime == 30) {
+                MainScene.sound.playSound("beep");
                 txt.pixiObj.style.fill = 0xcc9a6e;
             }
 
+            if (roundTime > 0 && roundTime <= 5) {
+                MainScene.sound.playSound("beep");
+            }
+
             if (roundTime == 0) {
+
+                MainScene.sound.playSound("gameover");
+
                 caller.destroy();
 
                 // Game over. Do the following
