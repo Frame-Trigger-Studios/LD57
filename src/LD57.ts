@@ -54,6 +54,8 @@ import slowSfx from "./sfx/slow.wav";
 import speedupSfx from "./sfx/speedup.wav";
 import wallhitSfx from "./sfx/wallhit.wav";
 
+import gameMusic from "./music/LD57-v1.mp3";
+
 
 export enum Layers {
     BACKGROUND,
@@ -259,9 +261,9 @@ export class LD57 extends Game {
         LD57.audioAtlas.load("wallhit", wallhitSfx).volume(0.5);
 
         // Import sounds and set their properties
-        // const music = LD57.audioAtlas.load("music", "ADD_ME")
-        //     .loop(true)
-        //     .volume(0.3);
+        const music = LD57.audioAtlas.load("music", gameMusic)
+            .loop(true)
+            .volume(1);
 
         // Import fonts. See index.html for examples of how to add new ones.
         const fonts = new Promise<void>((resolve, _) => {
