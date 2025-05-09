@@ -11,6 +11,7 @@ const main = document.querySelector<HTMLDivElement>('#main')!;
 
 const game = new LD57();
 
-main.appendChild(game.renderer.view);
-game.renderer.view.focus();
-game.start();
+game.start().then(() => {
+    main.appendChild(game.renderer.canvas);
+    game.renderer.canvas.focus();
+});

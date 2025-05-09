@@ -228,7 +228,11 @@ export class LD57 extends Game {
             resolution: 2,
             backgroundColor: 0x0B0926
         });
+    }
 
+    startScene = () => new MainScene(this)
+    resourceLoad = () => {
+        console.log("Starting res load")
         // Set the global log level
         Log.logLevel = LogLevel.WARN;
 
@@ -249,9 +253,6 @@ export class LD57 extends Game {
         this.addResource("outputPalette", new SpriteSheet(outputPaletteSpr, 4, 1))
         this.addResource("bar", new SpriteSheet(barSpr, 16, 144))
         this.addResource("bar_indicator", new SpriteSheet(barIndicatorSpr, 16, 11))
-
-        // Load an empty scene while we async load the resources for the main one
-        this.setScene(new Scene(this));
 
         LD57.audioAtlas.load("beep", beepSfx).volume(0.3);
         LD57.audioAtlas.load("coin", coinSfx).volume(0.3);
@@ -279,11 +280,7 @@ export class LD57 extends Game {
         });
 
         // Wait for all resources to be loaded and then start the main scene.
-        Promise.all([fonts, this.resourceLoader.loadAll()]).then(
-            () => {
-                this.setScene(new MainScene(this));
-            }
-        )
-
+        console.log("await res load")
+        return Promise.all([fonts, this.resourceLoader.loadAll()])
     }
 }
